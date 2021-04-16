@@ -9,13 +9,13 @@
 #define RNOMINAL 1000.0 // 0 deg C resistance,  PT100: 100.0, PT1000: 1000.0
 
 const int NTHERMS = 9;
-int thermPins[NTHERMS] = {4, 5, 13, 14, 27, 26, 25, 33, 32};
+int thermPins[NTHERMS] = {4, 5, 13, 14, 27, 26, 25, 33, 32}; // CS pins
 
 Adafruit_MAX31865 *therms[NTHERMS];
 
 float tempValues[NTHERMS];
 
-void printSpiPins()
+void printPins()
 {
   Serial.println();
   Serial.println("======================");
@@ -28,6 +28,12 @@ void printSpiPins()
   Serial.println(SCK);
   Serial.print("SS: \t");
   Serial.println(SS);
+  Serial.println("======================");
+  Serial.println("Default I2C GPIO pins");
+  Serial.print("SDA: \t");
+  Serial.println(SDA);
+  Serial.print("SCL: \t");
+  Serial.println(SCL);
   Serial.println();
 }
 
@@ -63,7 +69,7 @@ void printTemps()
 void setup()
 {
   Serial.begin(115200);
-  printSpiPins();
+  printPins();
   initTherms();
 }
 
