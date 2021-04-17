@@ -40,8 +40,9 @@ void loop()
   long start = millis();
   thermos.read();
   thermos.print();
-  // float * a = thermos.getTempValues();
-  // Serial.println(a[0]);
+  float * a = thermos.getTempValues();
+  Serial.println(a[0]);
+  Serial.println(thermos.getNumber());
   Serial.println(millis() - start);
   delay(1000);
 }

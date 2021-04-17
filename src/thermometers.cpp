@@ -14,7 +14,6 @@ float tempValues[NTHERMS];
 
 Thermometers::Thermometers()
 {   
-    // this->NTHERMS = sizeof(thermPins) / sizeof(thermPins[0]);
     for (int i = 0; i < NTHERMS; i++)
     {
         int pin = thermPins[i];
@@ -46,6 +45,6 @@ int Thermometers::getNumber(){
     return NTHERMS;
 }
 
-// float* Thermometers::getTempValues(){
-//     return tempValues;
-// }
+float* Thermometers::getTempValues(){
+    return tempValues;
+}

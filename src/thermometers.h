@@ -12,9 +12,7 @@ public:
     void read();
     void print();
     int getNumber();
-    // float* getTempValues();
-// private:
-//     int NTHERMS;
+    float* getTempValues();
 };
 
 #endif
