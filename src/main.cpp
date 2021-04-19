@@ -12,12 +12,13 @@ const char* mqtt_user = "YourMQTTBrokerUsername"; // change according your setup
 const char* mqtt_pw = "YourMQTTBrokerPassword";   //    "
 const char* input_topic = "YourTopic";            // change according your setup : MQTT topic for messages from device to broker
 
-const int stationID = 3; // check stations table in database
-long readInterval = 3000;
+unsigned long readInterval = 3000;
 unsigned long uploadInterval = 10000;
 
-long lastReadMillis;
+unsigned long lastReadMillis;
 unsigned long lastUploadMillis;
+
+unsigned long execTime = 675; // time necessary to read all sensors
 
 String clientId;
 
@@ -37,27 +38,18 @@ uint8_t conn_stat;
 WiFiClient espClient;       // TCP client object, uses SSL/TLS
 MQTTClient mqttClient(512); // MQTT client object with a buffer size of 512 (depends on your message size)
 
-// Use software SPI: CS, DI, DO, CLK
-// Adafruit_MAX31865 maxe = Adafruit_MAX31865(15, 18, 4, 5); // As marked on board
-
-// use hardware SPI, just pass in the CS pin
-// Use print_spi_pins() to find your board defaults
 Adafruit_MAX31865 therm1 = Adafruit_MAX31865(4);  // As marked on board
-Adafruit_MAX31865 therm2 = Adafruit_MAX31865(5);  // As marked on board
-Adafruit_MAX31865 therm3 = Adafruit_MAX31865(13); // As marked on board
-Adafruit_MAX31865 therm4 = Adafruit_MAX31865(14); // As marked on board
-Adafruit_MAX31865 therm5 = Adafruit_MAX31865(27); // As marked on board
-Adafruit_MAX31865 therm6 = Adafruit_MAX31865(26); // As marked on board
-Adafruit_MAX31865 therm7 = Adafruit_MAX31865(25); // As marked on board
-Adafruit_MAX31865 therm8 = Adafruit_MAX31865(33); // As marked on board
-Adafruit_MAX31865 therm9 = Adafruit_MAX31865(32); // As marked on board
-// Adafruit_MAX31865 therm2 = Adafruit_MAX31865(4);
+Adafruit_MAX31865 therm2 = Adafruit_MAX31865(5);
+Adafruit_MAX31865 therm3 = Adafruit_MAX31865(13);
+Adafruit_MAX31865 therm4 = Adafruit_MAX31865(14);
+Adafruit_MAX31865 therm5 = Adafruit_MAX31865(27);
+Adafruit_MAX31865 therm6 = Adafruit_MAX31865(26);
+Adafruit_MAX31865 therm7 = Adafruit_MAX31865(25);
+Adafruit_MAX31865 therm8 = Adafruit_MAX31865(33);
+Adafruit_MAX31865 therm9 = Adafruit_MAX31865(32);
 
-// The value of the Rref resistor. Use 430.0 for PT100 and 4300.0 for PT1000
-#define RREF 4300.0
-// The 'nominal' 0-degrees-C resistance of the sensor
-// 100.0 for PT100, 1000.0 for PT1000
-#define RNOMINAL 1000.0
+#define RREF 4300.0     // Reference resistor, PT100: 430.0, PT1000: 4300.0
+#define RNOMINAL 1000.0 // 0 deg C resistance,  PT100: 100.0, PT1000: 1000.0
 
 Measurement t1;
 Measurement t2;
@@ -139,14 +131,14 @@ void setup()
   printSpiPins();
   WiFi.mode(WIFI_STA);          // config WiFi as client
   therm1.begin(MAX31865_4WIRE); // set to 2WIRE or 4WIRE as necessary
-  therm2.begin(MAX31865_4WIRE); // set to 2WIRE or 4WIRE as necessary
-  therm3.begin(MAX31865_4WIRE); // set to 2WIRE or 4WIRE as necessary
-  therm4.begin(MAX31865_4WIRE); // set to 2WIRE or 4WIRE as necessary
-  therm5.begin(MAX31865_4WIRE); // set to 2WIRE or 4WIRE as necessary
-  therm6.begin(MAX31865_4WIRE); // set to 2WIRE or 4WIRE as necessary
-  therm7.begin(MAX31865_4WIRE); // set to 2WIRE or 4WIRE as necessary
-  therm8.begin(MAX31865_4WIRE); // set to 2WIRE or 4WIRE as necessary
-  therm9.begin(MAX31865_4WIRE); // set to 2WIRE or 4WIRE as necessary
+  therm2.begin(MAX31865_4WIRE);
+  therm3.begin(MAX31865_4WIRE);
+  therm4.begin(MAX31865_4WIRE);
+  therm5.begin(MAX31865_4WIRE);
+  therm6.begin(MAX31865_4WIRE);
+  therm7.begin(MAX31865_4WIRE);
+  therm8.begin(MAX31865_4WIRE);
+  therm9.begin(MAX31865_4WIRE);
 
 }
 
@@ -154,7 +146,7 @@ void loop()
 {
   if (connected())
   {
-    if (millis() - lastReadMillis > readInterval)
+    if (millis() - lastReadMillis >= (readInterval - execTime))
     {
       t1.update(therm1.temperature(RNOMINAL, RREF));
       t2.update(therm1.temperature(RNOMINAL, RREF));
@@ -165,10 +157,9 @@ void loop()
       t7.update(therm1.temperature(RNOMINAL, RREF));
       t8.update(therm1.temperature(RNOMINAL, RREF));
       t9.update(therm1.temperature(RNOMINAL, RREF));
-      // Serial.println(temperature.toString());
       lastReadMillis = millis();
     }
-    if (millis() - lastUploadMillis > uploadInterval)
+    if (millis() - lastUploadMillis >= uploadInterval)
     {
       String json = "{\"t1\":\"" + String(t1.average()) +
                     "\" , \"t2\":\"" + String(t2.average()) +
@@ -178,8 +169,7 @@ void loop()
                     "\" , \"t6\":\"" + String(t6.average()) +
                     "\" , \"t7\":\"" + String(t7.average()) +
                     "\" , \"t8\":\"" + String(t8.average()) +
-                    "\" , \"t9\":\"" + String(t9.average()) +
-                    "\", \"stationID\":\"" + stationID + "\" }";
+                    "\" , \"t9\":\"" + String(t9.average()) + "\" }";
 
       char *payload = &json[0]; // converts String to char*
       mqttClient.publish(input_topic, payload);
