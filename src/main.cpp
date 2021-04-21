@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_MAX31865.h>
+#include "DFRobot_SHT20.h"
+#include <Adafruit_ADS1015.h>
 #include <WiFi.h>
 #include <MQTTClient.h> // MQTT Client from Joël Gaehwiler https://github.com/256dpi/arduino-mqtt   keepalive manually to 15s
 #include <Measurement.h>
@@ -53,9 +55,11 @@ Adafruit_MAX31865 therm9 = Adafruit_MAX31865(32);
 
 DFRobot_SHT20 sht20;
 
-Measurement t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, h1;
+Adafruit_ADS1115 ads(0x49);
 
-void printSpiPins()
+Measurement t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, h1, irr;
+
+void printPins()
 {
   Serial.println();
   Serial.println("======================");
@@ -68,6 +72,12 @@ void printSpiPins()
   Serial.println(SCK);
   Serial.print("SS: \t");
   Serial.println(SS);
+  Serial.println("======================");
+  Serial.println("Default I2C GPIO pins");
+  Serial.print("SDA: \t");
+  Serial.println(SDA);
+  Serial.print("SCL: \t");
+  Serial.println(SCL);
   Serial.println();
 }
 
@@ -118,10 +128,17 @@ boolean connected()
   return conn_stat == 5;
 }
 
+float readVoltage(uint adsPin)
+{
+  int16_t adc0;
+  adc0 = ads.readADC_SingleEnded(adsPin);
+  return adc0 * 0.1875; // millivolts, reference_voltage/possible_values: 6.144/2^(16-1)=0.1875
+}
+
 void setup()
 {
   Serial.begin(115200);
-  printSpiPins();
+  printPins();
   WiFi.mode(WIFI_STA);          // config WiFi as client
   therm1.begin(MAX31865_4WIRE); // set to 2WIRE or 4WIRE as necessary
   therm2.begin(MAX31865_4WIRE);
@@ -132,9 +149,10 @@ void setup()
   therm7.begin(MAX31865_4WIRE);
   therm8.begin(MAX31865_4WIRE);
   therm9.begin(MAX31865_4WIRE);
-  sht20.initSHT20(); // Init SHT20 Sensor
+  sht20.initSHT20();
   delay(100);
-  sht20.checkSHT20(); // Check SHT20 Sensor
+  sht20.checkSHT20();
+  ads.begin();
 }
 
 void loop()
@@ -155,6 +173,7 @@ void loop()
       t9.update(therm1.temperature(RNOMINAL, RREF));
       t10.update(sht20.readTemperature());
       h1.update(sht20.readHumidity());
+      irr.update(readVoltage(0));
     }
     if (millis() - lastUploadMillis >= uploadInterval)
     {
@@ -168,7 +187,8 @@ void loop()
                     "\" , \"t8\":\"" + String(t8.average()) +
                     "\" , \"t9\":\"" + String(t9.average()) +
                     "\" , \"t10\":\"" + String(t10.average()) +
-                    "\" , \"h1\":\"" + String(h1.average()) + "\" }";
+                    "\" , \"h1\":\"" + String(h1.average()) +
+                    "\" , \"irr\":\"" + String(irr.average()) + "\" }";
 
       char *payload = &json[0]; // converts String to char*
       mqttClient.publish(input_topic, payload);
