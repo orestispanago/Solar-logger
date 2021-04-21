@@ -14,13 +14,11 @@ const char* mqtt_user = "YourMQTTBrokerUsername"; // change according your setup
 const char* mqtt_pw = "YourMQTTBrokerPassword";   //    "
 const char* input_topic = "YourTopic";            // change according your setup : MQTT topic for messages from device to broker
 
-unsigned long readInterval = 3000;
+unsigned long readInterval = 2000;
 unsigned long uploadInterval = 10000;
 
 unsigned long lastReadMillis;
 unsigned long lastUploadMillis;
-
-unsigned long execTime = 675; // time necessary to read all sensors
 
 String clientId;
 
@@ -161,7 +159,6 @@ void loop()
   {
     if (millis() - lastReadMillis >= readInterval)
     {
-      lastReadMillis = millis();
       t1.update(therm1.temperature(RNOMINAL, RREF));
       t2.update(therm1.temperature(RNOMINAL, RREF));
       t3.update(therm1.temperature(RNOMINAL, RREF));
@@ -174,6 +171,7 @@ void loop()
       t10.update(sht20.readTemperature());
       h1.update(sht20.readHumidity());
       irr.update(readVoltage(0));
+      lastReadMillis = millis();
     }
     if (millis() - lastUploadMillis >= uploadInterval)
     {
