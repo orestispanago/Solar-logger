@@ -38,7 +38,7 @@ uint8_t conn_stat;
 WiFiClient espClient;       // TCP client object, uses SSL/TLS
 MQTTClient mqttClient(512); // MQTT client object with a buffer size of 512 (depends on your message size)
 
-Adafruit_MAX31865 therm1 = Adafruit_MAX31865(4);  // As marked on board
+Adafruit_MAX31865 therm1 = Adafruit_MAX31865(4); // As marked on board
 Adafruit_MAX31865 therm2 = Adafruit_MAX31865(5);
 Adafruit_MAX31865 therm3 = Adafruit_MAX31865(13);
 Adafruit_MAX31865 therm4 = Adafruit_MAX31865(14);
@@ -51,16 +51,9 @@ Adafruit_MAX31865 therm9 = Adafruit_MAX31865(32);
 #define RREF 4300.0     // Reference resistor, PT100: 430.0, PT1000: 4300.0
 #define RNOMINAL 1000.0 // 0 deg C resistance,  PT100: 100.0, PT1000: 1000.0
 
-Measurement t1;
-Measurement t2;
-Measurement t3;
-Measurement t4;
-Measurement t5;
-Measurement t6;
-Measurement t7;
-Measurement t8;
-Measurement t9;
+DFRobot_SHT20 sht20;
 
+Measurement t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, h1;
 
 void printSpiPins()
 {
@@ -139,15 +132,18 @@ void setup()
   therm7.begin(MAX31865_4WIRE);
   therm8.begin(MAX31865_4WIRE);
   therm9.begin(MAX31865_4WIRE);
-
+  sht20.initSHT20(); // Init SHT20 Sensor
+  delay(100);
+  sht20.checkSHT20(); // Check SHT20 Sensor
 }
 
 void loop()
 {
   if (connected())
   {
-    if (millis() - lastReadMillis >= (readInterval - execTime))
+    if (millis() - lastReadMillis >= readInterval)
     {
+      lastReadMillis = millis();
       t1.update(therm1.temperature(RNOMINAL, RREF));
       t2.update(therm1.temperature(RNOMINAL, RREF));
       t3.update(therm1.temperature(RNOMINAL, RREF));
@@ -157,7 +153,8 @@ void loop()
       t7.update(therm1.temperature(RNOMINAL, RREF));
       t8.update(therm1.temperature(RNOMINAL, RREF));
       t9.update(therm1.temperature(RNOMINAL, RREF));
-      lastReadMillis = millis();
+      t10.update(sht20.readTemperature());
+      h1.update(sht20.readHumidity());
     }
     if (millis() - lastUploadMillis >= uploadInterval)
     {
@@ -169,7 +166,9 @@ void loop()
                     "\" , \"t6\":\"" + String(t6.average()) +
                     "\" , \"t7\":\"" + String(t7.average()) +
                     "\" , \"t8\":\"" + String(t8.average()) +
-                    "\" , \"t9\":\"" + String(t9.average()) + "\" }";
+                    "\" , \"t9\":\"" + String(t9.average()) +
+                    "\" , \"t10\":\"" + String(t10.average()) +
+                    "\" , \"h1\":\"" + String(h1.average()) + "\" }";
 
       char *payload = &json[0]; // converts String to char*
       mqttClient.publish(input_topic, payload);
