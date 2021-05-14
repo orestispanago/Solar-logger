@@ -5,14 +5,15 @@
 #include <Adafruit_ADS1015.h>
 #include <WiFi.h>
 #include <MQTTClient.h> // MQTT Client from Joël Gaehwiler https://github.com/256dpi/arduino-mqtt   keepalive manually to 15s
+#include <ArduinoJson.h>
 #include <Measurement.h>
 
-const char* WiFi_SSID = "YourWiFiSSID";           // change according your setup : SSID and password for the WiFi network
-const char* WiFi_PW = "YourWiFiPassword";         //    "
-const char* mqtt_broker = "YourMQTTBrokerIP";     // change according your setup : IP Adress or FQDN of your MQTT broker
-const char* mqtt_user = "YourMQTTBrokerUsername"; // change according your setup : username and password for authenticated broker access
-const char* mqtt_pw = "YourMQTTBrokerPassword";   //    "
-const char* input_topic = "YourTopic";            // change according your setup : MQTT topic for messages from device to broker
+const char* WiFi_SSID = "YourWiFiSSID";
+const char* WiFi_PW = "YourWiFiPassword";
+const char* mqtt_broker = "YourMQTTBrokerIP";
+const char* mqtt_user = "YourMQTTBrokerUsername";
+const char* mqtt_pw = "YourMQTTBrokerPassword";
+const char* input_topic = "YourTopic";
 
 String clientId;
 
