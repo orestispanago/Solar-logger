@@ -14,13 +14,14 @@ const char* mqtt_user = "YourMQTTBrokerUsername"; // change according your setup
 const char* mqtt_pw = "YourMQTTBrokerPassword";   //    "
 const char* input_topic = "YourTopic";            // change according your setup : MQTT topic for messages from device to broker
 
+String clientId;
+
 unsigned long readInterval = 2000;
 unsigned long uploadInterval = 10000;
 
+unsigned long currentMillis;
 unsigned long lastReadMillis;
 unsigned long lastUploadMillis;
-
-String clientId;
 
 unsigned long waitCount;
 uint8_t conn_stat;
@@ -38,6 +39,9 @@ uint8_t conn_stat;
 WiFiClient espClient;       // TCP client object, uses SSL/TLS
 MQTTClient mqttClient(512); // MQTT client object with a buffer size of 512 (depends on your message size)
 
+StaticJsonDocument<256> jsonDoc;
+char payload[256];
+
 Adafruit_MAX31865 therm1 = Adafruit_MAX31865(4); // As marked on board
 Adafruit_MAX31865 therm2 = Adafruit_MAX31865(5);
 Adafruit_MAX31865 therm3 = Adafruit_MAX31865(13);
@@ -48,8 +52,10 @@ Adafruit_MAX31865 therm7 = Adafruit_MAX31865(25);
 Adafruit_MAX31865 therm8 = Adafruit_MAX31865(33);
 Adafruit_MAX31865 therm9 = Adafruit_MAX31865(32);
 
-#define RREF 4300.0     // Reference resistor, PT100: 430.0, PT1000: 4300.0
-#define RNOMINAL 1000.0 // 0 deg C resistance,  PT100: 100.0, PT1000: 1000.0
+#define PT1000_RREF 4300.0     // Reference resistor, PT100: 430.0, PT1000: 4300.0
+#define PT1000_RNOMINAL 1000.0 // 0 deg C resistance,  PT100: 100.0, PT1000: 1000.0
+#define PT100_RREF 430.0
+#define PT100_RNOMINAL 100.0
 
 DFRobot_SHT20 sht20;
 
@@ -157,42 +163,43 @@ void loop()
 {
   if (connected())
   {
-    if (millis() - lastReadMillis >= readInterval)
+    currentMillis = millis();
+    if (currentMillis - lastReadMillis >= readInterval)
     {
-      t1.update(therm1.temperature(RNOMINAL, RREF));
-      t2.update(therm1.temperature(RNOMINAL, RREF));
-      t3.update(therm1.temperature(RNOMINAL, RREF));
-      t4.update(therm1.temperature(RNOMINAL, RREF));
-      t5.update(therm1.temperature(RNOMINAL, RREF));
-      t6.update(therm1.temperature(RNOMINAL, RREF));
-      t7.update(therm1.temperature(RNOMINAL, RREF));
-      t8.update(therm1.temperature(RNOMINAL, RREF));
-      t9.update(therm1.temperature(RNOMINAL, RREF));
+      lastReadMillis = currentMillis;
+      t1.update(therm1.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t2.update(therm2.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t3.update(therm3.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t4.update(therm4.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t5.update(therm5.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t6.update(therm6.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t7.update(therm7.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t8.update(therm8.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t9.update(therm9.temperature(PT100_RNOMINAL, PT100_RREF));
       t10.update(sht20.readTemperature());
       h1.update(sht20.readHumidity());
       irr.update(readVoltage(0));
-      lastReadMillis = millis();
     }
-    if (millis() - lastUploadMillis >= uploadInterval)
+    currentMillis = millis();
+    if (currentMillis - lastUploadMillis >= uploadInterval)
     {
-      String json = "{\"t1\":\"" + String(t1.average()) +
-                    "\" , \"t2\":\"" + String(t2.average()) +
-                    "\" , \"t3\":\"" + String(t3.average()) +
-                    "\" , \"t4\":\"" + String(t4.average()) +
-                    "\" , \"t5\":\"" + String(t5.average()) +
-                    "\" , \"t6\":\"" + String(t6.average()) +
-                    "\" , \"t7\":\"" + String(t7.average()) +
-                    "\" , \"t8\":\"" + String(t8.average()) +
-                    "\" , \"t9\":\"" + String(t9.average()) +
-                    "\" , \"t10\":\"" + String(t10.average()) +
-                    "\" , \"h1\":\"" + String(h1.average()) +
-                    "\" , \"irr\":\"" + String(irr.average()) + "\" }";
-
-      char *payload = &json[0]; // converts String to char*
+      lastUploadMillis = currentMillis;
+      jsonDoc["t1"] = t1.average();
+      jsonDoc["t2"] = t2.average();
+      jsonDoc["t3"] = t3.average();
+      jsonDoc["t4"] = t4.average();
+      jsonDoc["t5"] = t5.average();
+      jsonDoc["t6"] = t6.average();
+      jsonDoc["t7"] = t7.average();
+      jsonDoc["t8"] = t8.average();
+      jsonDoc["t9"] = t9.average();
+      jsonDoc["t10"] = t10.average();
+      jsonDoc["h1"] = h1.average();
+      jsonDoc["irr"] = irr.average();
+      jsonDoc["freeHeap"] = ESP.getFreeHeap();
+      serializeJson(jsonDoc, payload);
       mqttClient.publish(input_topic, payload);
       mqttClient.loop(); //      give control to MQTT to send message to broker
-
-      lastUploadMillis = millis();
     }
     mqttClient.loop();
   }
