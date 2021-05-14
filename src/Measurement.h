@@ -11,9 +11,7 @@ public:
     float getCurrent();
     float getTotal();
     float average();
-    void update(float newVal);
-    // void reset();
-    // String toString();
+    void sample(float newVal);
 
 private:
     long count;

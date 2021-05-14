@@ -37,11 +37,13 @@ uint8_t conn_stat;
 //      4 |    up    | finalising
 //      5 |    up    |     up
 
-WiFiClient espClient;       // TCP client object, uses SSL/TLS
-MQTTClient mqttClient(512); // MQTT client object with a buffer size of 512 (depends on your message size)
+const int16_t messageSize = 256;
 
-StaticJsonDocument<256> jsonDoc;
-char payload[256];
+WiFiClient espClient;       // TCP client object, uses SSL/TLS
+MQTTClient mqttClient(messageSize); // MQTT client object with a buffer size of 512 (depends on your message size)
+
+StaticJsonDocument<messageSize> jsonDoc;
+char payload[messageSize];
 
 Adafruit_MAX31865 therm1 = Adafruit_MAX31865(4); // As marked on board
 Adafruit_MAX31865 therm2 = Adafruit_MAX31865(5);
@@ -168,18 +170,18 @@ void loop()
     if (currentMillis - lastReadMillis >= readInterval)
     {
       lastReadMillis = currentMillis;
-      t1.update(therm1.temperature(PT1000_RNOMINAL, PT1000_RREF));
-      t2.update(therm2.temperature(PT1000_RNOMINAL, PT1000_RREF));
-      t3.update(therm3.temperature(PT1000_RNOMINAL, PT1000_RREF));
-      t4.update(therm4.temperature(PT1000_RNOMINAL, PT1000_RREF));
-      t5.update(therm5.temperature(PT1000_RNOMINAL, PT1000_RREF));
-      t6.update(therm6.temperature(PT1000_RNOMINAL, PT1000_RREF));
-      t7.update(therm7.temperature(PT1000_RNOMINAL, PT1000_RREF));
-      t8.update(therm8.temperature(PT1000_RNOMINAL, PT1000_RREF));
-      t9.update(therm9.temperature(PT100_RNOMINAL, PT100_RREF));
-      t10.update(sht20.readTemperature());
-      h1.update(sht20.readHumidity());
-      irr.update(readVoltage(0));
+      t1.sample(therm1.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t2.sample(therm2.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t3.sample(therm3.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t4.sample(therm4.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t5.sample(therm5.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t6.sample(therm6.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t7.sample(therm7.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t8.sample(therm8.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t9.sample(therm9.temperature(PT100_RNOMINAL, PT100_RREF));
+      t10.sample(sht20.readTemperature());
+      h1.sample(sht20.readHumidity());
+      irr.sample(readVoltage(0));
     }
     currentMillis = millis();
     if (currentMillis - lastUploadMillis >= uploadInterval)

@@ -27,23 +27,10 @@ long Measurement::getCount()
     return count;
 }
 
-void Measurement::update(float newVal)
+void Measurement::sample(float newVal)
 {
     count++;
     current = newVal;
     total = total + current;
     _average = (total / count);
 }
-// void Measurement::reset()
-// {
-//     total = 0.0;
-//     count = 0.0;
-// }
-
-// String Measurement::toString()
-// {
-//     return "Measurement: { count: " + String(count) + "," +
-//            " current: " + String(current) + "," +
-//            " total: " + String(total) + "," +
-//            " average: " + String(_average) + " }";
-// }
