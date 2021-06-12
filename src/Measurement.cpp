@@ -42,7 +42,6 @@ float Measurement::stdev()
     return _stdev;
 }
 
-
 void Measurement::reset()
 {
     _sum = 0.0;

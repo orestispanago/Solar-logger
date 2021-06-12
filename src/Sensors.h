@@ -21,20 +21,20 @@ Pyranometer pyranometer;
 
 Measurement t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, h1, irr;
 
-void readAll()
+void resetMeasurements()
 {
-    t1.sample(therm1.temperature());
-    t2.sample(therm2.temperature());
-    t3.sample(therm3.temperature());
-    t4.sample(therm4.temperature());
-    t5.sample(therm5.temperature());
-    t6.sample(therm6.temperature());
-    t7.sample(therm7.temperature());
-    t8.sample(therm8.temperature());
-    t9.sample(therm9.temperature());
-    t10.sample(sht20.temperature());
-    h1.sample(sht20.humidity());
-    irr.sample(pyranometer.voltage());
+    t1.reset();
+    t2.reset();
+    t3.reset();
+    t4.reset();
+    t5.reset();
+    t6.reset();
+    t7.reset();
+    t8.reset();
+    t9.reset();
+    t10.reset();
+    h1.reset();
+    irr.reset();
 }
 
 #endif

@@ -15,8 +15,25 @@ void setup()
   WiFi.mode(WIFI_STA); // config WiFi as client
 }
 
+void readAll()
+{
+  t1.sample(therm1.temperature());
+  t2.sample(therm2.temperature());
+  t3.sample(therm3.temperature());
+  t4.sample(therm4.temperature());
+  t5.sample(therm5.temperature());
+  t6.sample(therm6.temperature());
+  t7.sample(therm7.temperature());
+  t8.sample(therm8.temperature());
+  t9.sample(therm9.temperature());
+  t10.sample(sht20.temperature());
+  h1.sample(sht20.humidity());
+  irr.sample(pyranometer.voltage());
+}
+
 void updatePayload()
 {
+  jsonDoc["count"] = t1.count();
   jsonDoc["t1"] = t1.mean();
   jsonDoc["t2"] = t2.mean();
   jsonDoc["t3"] = t3.mean();
@@ -47,6 +64,7 @@ void loop()
     {
       lastUploadMillis = currentMillis;
       updatePayload();
+      resetMeasurements();
       upload();
     }
     check();
