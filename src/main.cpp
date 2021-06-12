@@ -28,7 +28,8 @@ void readAll()
   t9.sample(therm9.temperature());
   t10.sample(sht20.temperature());
   h1.sample(sht20.humidity());
-  irr.sample(pyranometer.voltage());
+  irradiance.sample();
+  // irr.sample(pyranometer.read());
 }
 
 void updatePayload()
