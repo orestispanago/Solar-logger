@@ -21,3 +21,8 @@ void printPins()
     Serial.println(SCL);
     Serial.println();
 }
+
+float getHeapUsage()
+{
+    return 100 * (1.0 * ESP.getFreeHeap() / ESP.getHeapSize());
+}

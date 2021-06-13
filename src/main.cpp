@@ -1,53 +1,66 @@
 #include <Arduino.h>
 #include "Connection.h"
 #include "utils.h"
-#include "Sensors.h"
+#include "RTD.h"
+#include "Pyranometer.h"
+#include "ThermoHygrometer.h"
+#include "Quantity.h"
 
 unsigned long readInterval = 2000;
 unsigned long uploadInterval = 10000;
 
 unsigned long currentMillis, lastReadMillis, lastUploadMillis;
 
+RTD therm1 = RTD(PT1000, FOUR_WIRE, 4);
+RTD therm2 = RTD(PT1000, FOUR_WIRE, 5);
+RTD therm3 = RTD(PT1000, FOUR_WIRE, 13);
+RTD therm4 = RTD(PT1000, FOUR_WIRE, 14);
+RTD therm5 = RTD(PT1000, FOUR_WIRE, 27);
+RTD therm6 = RTD(PT1000, FOUR_WIRE, 26);
+RTD therm7 = RTD(PT1000, FOUR_WIRE, 25);
+RTD therm8 = RTD(PT1000, FOUR_WIRE, 33);
+
+ThermoHygrometer sht20;
+Pyranometer pyranometer;
+
+// Quantity rh = Quantity("RH", &sht20);
+
+Quantity quantities[] = {
+    Quantity("Tin", &therm1),
+    Quantity("Tout", &therm2),
+    Quantity("Tamb", &therm3),
+    Quantity("Tafb", &therm4),
+    Quantity("Tafb", &therm5),
+    Quantity("Taft", &therm6),
+    Quantity("Tabm", &therm7),
+    Quantity("Tout", &therm8),
+    Quantity("Irr", &pyranometer)};
+
+int numQuantities = sizeof(quantities) / sizeof(quantities[0]);
+
+void readAll()
+{
+  for (int i = 0; i < numQuantities; i++)
+  {
+    quantities[i].sample();
+  }
+}
+
+void updatePayload()
+{
+  jsonDoc["count"] = quantities[0].count();
+  for (int i = 0; i < numQuantities; i++)
+  {
+    jsonDoc[quantities[i].label] = quantities[i].mean();
+  }
+  jsonDoc["heapUsage"] = getHeapUsage();
+}
+
 void setup()
 {
   Serial.begin(115200);
   printPins();
   WiFi.mode(WIFI_STA); // config WiFi as client
-}
-
-void readAll()
-{
-  t1.sample(therm1.temperature());
-  t2.sample(therm2.temperature());
-  t3.sample(therm3.temperature());
-  t4.sample(therm4.temperature());
-  t5.sample(therm5.temperature());
-  t6.sample(therm6.temperature());
-  t7.sample(therm7.temperature());
-  t8.sample(therm8.temperature());
-  t9.sample(therm9.temperature());
-  t10.sample(sht20.temperature());
-  h1.sample(sht20.humidity());
-  irradiance.sample();
-  // irr.sample(pyranometer.read());
-}
-
-void updatePayload()
-{
-  jsonDoc["count"] = t1.count();
-  jsonDoc["t1"] = t1.mean();
-  jsonDoc["t2"] = t2.mean();
-  jsonDoc["t3"] = t3.mean();
-  jsonDoc["t4"] = t4.mean();
-  jsonDoc["t5"] = t5.mean();
-  jsonDoc["t6"] = t6.mean();
-  jsonDoc["t7"] = t7.mean();
-  jsonDoc["t8"] = t8.mean();
-  jsonDoc["t9"] = t9.mean();
-  jsonDoc["t10"] = t10.mean();
-  jsonDoc["h1"] = h1.mean();
-  jsonDoc["irr"] = irr.mean();
-  jsonDoc["freeHeap"] = ESP.getFreeHeap();
 }
 
 void loop()
@@ -65,7 +78,6 @@ void loop()
     {
       lastUploadMillis = currentMillis;
       updatePayload();
-      resetMeasurements();
       upload();
     }
     check();

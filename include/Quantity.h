@@ -1,12 +1,12 @@
-#ifndef Measurement_h
-#define Measurement_h
+#ifndef Quantity_h
+#define Quantity_h
 
-#include "Arduino.h"
+#include "Sensor.h"
 
-class Measurement
+class Quantity
 {
 public:
-    Measurement();
+    Quantity(const char name[], Sensor *sensor);
     unsigned long count();
     float current();
     float sum();
@@ -14,11 +14,13 @@ public:
     float min();
     float max();
     float stdev();
-    void sample(float newVal);
+    void sample();
     void print();
     void reset();
+    const char *label;
 
 private:
+    Sensor *_sensor;
     unsigned long _count;
     float _current;
     float _sum;

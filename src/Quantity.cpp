@@ -1,48 +1,51 @@
 #include "Arduino.h"
-#include "Measurement.h"
+#include "Quantity.h"
 
-Measurement::Measurement()
+Quantity::Quantity(const char name[], Sensor *sensor)
 {
+    label = name;
+    _sensor = sensor;
     _min = 999.99;
     _max = -999.99;
 }
 
-float Measurement::current()
+float Quantity::current()
 {
     return _current;
 }
 
-float Measurement::sum()
+float Quantity::sum()
 {
     return _sum;
 }
 
-unsigned long Measurement::count()
+unsigned long Quantity::count()
 {
     return _count;
 }
 
-float Measurement::mean()
+float Quantity::mean()
 {
+    reset();
     return _mean;
 }
 
-float Measurement::min()
+float Quantity::min()
 {
     return _min;
 }
 
-float Measurement::max()
+float Quantity::max()
 {
     return _max;
 }
 
-float Measurement::stdev()
+float Quantity::stdev()
 {
     return _stdev;
 }
 
-void Measurement::reset()
+void Quantity::reset()
 {
     _sum = 0.0;
     _count = 0.0;
@@ -51,25 +54,25 @@ void Measurement::reset()
     _sqDiffMean = 0;
 }
 
-void Measurement::sample(float newVal)
+void Quantity::sample()
 {
     _count++;
-    _current = newVal;
+    _current = _sensor->read();
     _sum = _sum + _current;
     _mean = (_sum / _count);
-    if (newVal < _min)
+    if (_current < _min)
     {
-        _min = newVal;
+        _min = _current;
     }
-    if (newVal > _max)
+    if (_current > _max)
     {
-        _max = newVal;
+        _max = _current;
     }
-    _sqDiffMean += sq(newVal - _mean);
+    _sqDiffMean += sq(_current - _mean);
     _stdev = sqrt(_sqDiffMean / _count);
 }
 
-void Measurement::print()
+void Quantity::print()
 {
     Serial.print("count: ");
     Serial.print(_count);

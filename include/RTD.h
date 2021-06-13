@@ -2,6 +2,7 @@
 #define RTD_h
 #include <Wire.h>
 #include <Adafruit_MAX31865.h>
+#include "Sensor.h"
 
 enum RTDType
 {
@@ -16,11 +17,11 @@ enum numWires
     FOUR_WIRE
 };
 
-class RTD
+class RTD : public Sensor
 {
 public:
     RTD(RTDType rtdType, numWires wires, int pin);
-    float temperature();
+    float read();
 
 private:
     Adafruit_MAX31865 *_max31865;

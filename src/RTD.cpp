@@ -33,7 +33,7 @@ void RTD::_begin()
         break;
     }
 }
-float RTD::temperature()
+float RTD::read()
 {
     return _max31865->temperature(_rNominal, _rRef);
 }
