@@ -1,46 +1,22 @@
-#ifndef Connection_h
-#define Connection_h
-
-#include "Arduino.h"
-#include <WiFi.h>
-#include <MQTTClient.h> // MQTT Client from Joël Gaehwiler https://github.com/256dpi/arduino-mqtt   keepalive manually to 15s
-#include <ArduinoJson.h>
+#include <WiFiMQTTClient.h>
 #include <credentials.h>
 
-// class Connection
-// {
-// public:
-//     Connection(int16_t messageSize);
-//     boolean statusOK();
-//     void upload();
-//     void check();
-//     StaticJsonDocument<256> jsonDoc;
-//     char payload[256];
+MQTTClient mqttClient(256);
 
-// private:
-//     MQTTClient mqttClient;
-//     uint8_t status;
-//     unsigned long waitCount;
-//     WiFiClient espClient;
-//     String clientId;
-// };
-unsigned long waitCount;
-uint8_t status;
-String clientId;
+WiFiMQTTClient::WiFiMQTTClient()
+{
+    unsigned long waitCount;
+    uint8_t status;
+    String clientId;
 
-const int16_t messageSize = 256;
+    WiFiClient espClient;
+    // MQTTClient mqttClient(256);
+    StaticJsonDocument<256> jsonDoc;
+    char payload[256];
+    WiFi.mode(WIFI_STA); // config WiFi as client
+}
 
-WiFiClient espClient;
-MQTTClient mqttClient(messageSize);
-StaticJsonDocument<messageSize> jsonDoc;
-char payload[messageSize];
-
-// void initConnection()
-// {
-//     WiFi.mode(WIFI_STA); // config WiFi as client
-// }
-
-boolean statusOK()
+boolean WiFiMQTTClient::connected()
 {
     // Connection status for WiFi and MQTT:
     //
@@ -99,16 +75,14 @@ boolean statusOK()
     return status == 5;
 }
 
-void upload()
+void WiFiMQTTClient::upload()
 {
     serializeJson(jsonDoc, payload);
     mqttClient.publish(input_topic, payload);
     mqttClient.loop(); //      give control to MQTT to send message to broker
 }
 
-void check()
+void WiFiMQTTClient::loop()
 {
     mqttClient.loop();
 }
-
-#endif

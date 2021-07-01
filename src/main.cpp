@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "Connection.h"
+#include "WiFiMQTTClient.h"
 #include "utils.h"
 #include "RTD.h"
 #include "Pyranometer.h"
@@ -45,6 +45,8 @@ Quantity quantities[] = {
 
 int numQuantities = sizeof(quantities) / sizeof(quantities[0]);
 
+WiFiMQTTClient client;
+
 void readAll()
 {
   for (int i = 0; i < numQuantities; i++)
@@ -55,24 +57,23 @@ void readAll()
 
 void updatePayload()
 {
-  jsonDoc["count"] = quantities[0].count();
+  client.jsonDoc["count"] = quantities[0].count();
   for (int i = 0; i < numQuantities; i++)
   {
-    jsonDoc[quantities[i].label] = quantities[i].mean();
+    client.jsonDoc[quantities[i].label] = quantities[i].mean();
   }
-  jsonDoc["heapUsage"] = getHeapUsage();
+  client.jsonDoc["heapUsage"] = getHeapUsage();
 }
 
 void setup()
 {
   Serial.begin(115200);
   printPins();
-  WiFi.mode(WIFI_STA); // config WiFi as client
 }
 
 void loop()
 {
-  if (statusOK())
+  if (client.connected())
   {
     currentMillis = millis();
     if (currentMillis - lastReadMillis >= readInterval)
@@ -85,8 +86,8 @@ void loop()
     {
       lastUploadMillis = currentMillis;
       updatePayload();
-      upload();
+      client.upload();
     }
-    check();
+    client.loop();
   }
 }
