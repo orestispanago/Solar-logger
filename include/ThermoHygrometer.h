@@ -3,16 +3,15 @@
 
 #include <Wire.h>
 #include "DFRobot_SHT20.h"
+#include "Sensor.h"
 
-class ThermoHygrometer
+class ThermoHygrometer : public Sensor
 {
 public:
     ThermoHygrometer();
-    float temperature();
-    float humidity();
+    DFRobot_SHT20 _sht20;
 
 private:
-    DFRobot_SHT20 _sht20;
     void _init();
 };
 
