@@ -39,21 +39,23 @@ uint8_t conn_stat;
 
 const int16_t messageSize = 256;
 
-WiFiClient espClient;       // TCP client object, uses SSL/TLS
+WiFiClient espClient;               // TCP client object, uses SSL/TLS
 MQTTClient mqttClient(messageSize); // MQTT client object with a buffer size of 512 (depends on your message size)
 
 StaticJsonDocument<messageSize> jsonDoc;
 char payload[messageSize];
 
-Adafruit_MAX31865 therm1 = Adafruit_MAX31865(4); // As marked on board
-Adafruit_MAX31865 therm2 = Adafruit_MAX31865(5);
-Adafruit_MAX31865 therm3 = Adafruit_MAX31865(13);
-Adafruit_MAX31865 therm4 = Adafruit_MAX31865(14);
-Adafruit_MAX31865 therm5 = Adafruit_MAX31865(27);
-Adafruit_MAX31865 therm6 = Adafruit_MAX31865(26);
+Adafruit_MAX31865 therm1 = Adafruit_MAX31865(17); // As marked on board
+Adafruit_MAX31865 therm2 = Adafruit_MAX31865(16);
+Adafruit_MAX31865 therm3 = Adafruit_MAX31865(4);
+Adafruit_MAX31865 therm4 = Adafruit_MAX31865(0);
+
+Adafruit_MAX31865 therm5 = Adafruit_MAX31865(32);
+Adafruit_MAX31865 therm6 = Adafruit_MAX31865(33);
 Adafruit_MAX31865 therm7 = Adafruit_MAX31865(25);
-Adafruit_MAX31865 therm8 = Adafruit_MAX31865(33);
-Adafruit_MAX31865 therm9 = Adafruit_MAX31865(32);
+Adafruit_MAX31865 therm8 = Adafruit_MAX31865(26);
+Adafruit_MAX31865 therm9 = Adafruit_MAX31865(27);
+Adafruit_MAX31865 therm10 = Adafruit_MAX31865(14);
 
 #define PT1000_RREF 4300.0     // Reference resistor, PT100: 430.0, PT1000: 4300.0
 #define PT1000_RNOMINAL 1000.0 // 0 deg C resistance,  PT100: 100.0, PT1000: 1000.0
@@ -64,7 +66,7 @@ DFRobot_SHT20 sht20;
 
 Adafruit_ADS1115 ads(0x49);
 
-Measurement t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, h1, irr;
+Measurement t1, t2, t3, t4, t5, t6, t7, t8, t9, t10; //, t11, h1, irr;
 
 void printPins()
 {
@@ -156,10 +158,11 @@ void setup()
   therm7.begin(MAX31865_4WIRE);
   therm8.begin(MAX31865_4WIRE);
   therm9.begin(MAX31865_4WIRE);
-  sht20.initSHT20();
-  delay(100);
-  sht20.checkSHT20();
-  ads.begin();
+  therm10.begin(MAX31865_4WIRE);
+  // sht20.initSHT20();
+  // delay(100);
+  // sht20.checkSHT20();
+  // ads.begin();
 }
 
 void loop()
@@ -178,10 +181,11 @@ void loop()
       t6.sample(therm6.temperature(PT1000_RNOMINAL, PT1000_RREF));
       t7.sample(therm7.temperature(PT1000_RNOMINAL, PT1000_RREF));
       t8.sample(therm8.temperature(PT1000_RNOMINAL, PT1000_RREF));
-      t9.sample(therm9.temperature(PT100_RNOMINAL, PT100_RREF));
-      t10.sample(sht20.readTemperature());
-      h1.sample(sht20.readHumidity());
-      irr.sample(readVoltage(0));
+      t9.sample(therm9.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      t10.sample(therm10.temperature(PT1000_RNOMINAL, PT1000_RREF));
+      // t10.sample(sht20.readTemperature());
+      // h1.sample(sht20.readHumidity());
+      // irr.sample(readVoltage(0));
     }
     currentMillis = millis();
     if (currentMillis - lastUploadMillis >= uploadInterval)
@@ -197,12 +201,13 @@ void loop()
       jsonDoc["t8"] = t8.average();
       jsonDoc["t9"] = t9.average();
       jsonDoc["t10"] = t10.average();
-      jsonDoc["h1"] = h1.average();
-      jsonDoc["irr"] = irr.average();
-      jsonDoc["freeHeap"] = ESP.getFreeHeap();
-      serializeJson(jsonDoc, payload);
-      mqttClient.publish(input_topic, payload);
-      mqttClient.loop(); //      give control to MQTT to send message to broker
+      // jsonDoc["h1"] = h1.average();
+      // jsonDoc["irr"] = irr.average();
+      // jsonDoc["freeHeap"] = ESP.getFreeHeap();
+      serializeJson(jsonDoc, Serial);
+      Serial.println();
+      // mqttClient.publish(input_topic, payload);
+      // mqttClient.loop(); //      give control to MQTT to send message to broker
     }
     mqttClient.loop();
   }
