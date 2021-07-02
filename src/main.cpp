@@ -7,11 +7,10 @@
 #include "SensirionHygrometer.h"
 #include "Quantity.h"
 #include "Row.h"
+#include "MeasurementService.h"
 
 unsigned long readInterval = 2000;
 unsigned long uploadInterval = 6000;
-
-unsigned long currentMillis, lastReadMillis, lastUploadMillis;
 
 RTD therm1(PT1000, FOUR_WIRE, 17);
 RTD therm2(PT1000, FOUR_WIRE, 16);
@@ -49,6 +48,8 @@ WiFiMQTTClient client;
 int numQuantities = sizeof(quantities) / sizeof(quantities[0]);
 Row row(quantities, numQuantities);
 
+MeasurementService ms(&row, &client);
+
 void setup()
 {
   Serial.begin(115200);
@@ -59,20 +60,8 @@ void loop()
 {
   if (client.connected())
   {
-    currentMillis = millis();
-    if (currentMillis - lastReadMillis >= readInterval)
-    {
-      lastReadMillis = currentMillis;
-      row.readAll();
-    }
-    currentMillis = millis();
-    if (currentMillis - lastUploadMillis >= uploadInterval)
-    {
-      lastUploadMillis = currentMillis;
-      row.update();
-      row.print();
-      client.upload(row);
-    }
+    ms.readAtInterval(readInterval);
+    ms.uploadAtInterval(uploadInterval);
     client.loop();
   }
 }

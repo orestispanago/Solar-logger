@@ -10,7 +10,7 @@ class WiFiMQTTClient
 public:
     WiFiMQTTClient();
     boolean connected();
-    void upload(Row row);
+    void upload(Row *row);
     void loop();
     StaticJsonDocument<256> jsonDoc;
     char payload[256];
