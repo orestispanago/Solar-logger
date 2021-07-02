@@ -1,3 +1,6 @@
+#ifndef utils_h
+#define utils_h
+
 #include <Arduino.h>
 
 void printPins()
@@ -26,3 +29,5 @@ float getHeapUsage()
 {
     return 100 * (1.0 * ESP.getFreeHeap() / ESP.getHeapSize());
 }
+
+#endif

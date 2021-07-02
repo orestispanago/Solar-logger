@@ -75,10 +75,9 @@ boolean WiFiMQTTClient::connected()
     return status == 5;
 }
 
-void WiFiMQTTClient::upload()
+void WiFiMQTTClient::upload(Row row)
 {
-    serializeJson(jsonDoc, payload);
-    mqttClient.publish(input_topic, payload);
+    mqttClient.publish(input_topic, row.payload());
     mqttClient.loop(); //      give control to MQTT to send message to broker
 }
 
