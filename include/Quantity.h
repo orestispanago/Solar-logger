@@ -1,12 +1,12 @@
 #ifndef Quantity_h
 #define Quantity_h
 
-#include "Sensor.h"
+// #include "Sensor.h"
 
 class Quantity
 {
 public:
-    Quantity(const char name[], Sensor *sensor);
+    Quantity();
     unsigned long count();
     float current();
     float sum();
@@ -14,13 +14,13 @@ public:
     float min();
     float max();
     float stdev();
-    void sample();
+    void sample(float current);
     void print();
     void reset();
-    const char *label;
+    // const char *label;
 
 private:
-    Sensor *_sensor;
+    // Sensor *_sensor;
     unsigned long _count;
     float _current;
     float _sum;

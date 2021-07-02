@@ -4,6 +4,7 @@
 #include <Adafruit_MAX31865.h>
 #include "Sensor.h"
 
+
 enum RTDType
 {
     PT100,
@@ -20,8 +21,8 @@ enum numWires
 class RTD : public Sensor
 {
 public:
-    RTD(RTDType rtdType, numWires wires, int pin);
-    float read();
+    RTD(RTDType rtdType, numWires wires, int pin, const char label[]);
+    void read();
 
 private:
     Adafruit_MAX31865 *_max31865;

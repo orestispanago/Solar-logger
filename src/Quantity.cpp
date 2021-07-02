@@ -1,10 +1,8 @@
 #include "Arduino.h"
 #include "Quantity.h"
 
-Quantity::Quantity(const char name[], Sensor *sensor)
+Quantity::Quantity()
 {
-    label = name;
-    _sensor = sensor;
     _min = 999.99;
     _max = -999.99;
 }
@@ -54,10 +52,10 @@ void Quantity::reset()
     _sqDiffMean = 0;
 }
 
-void Quantity::sample()
+void Quantity::sample(float current)
 {
     _count++;
-    _current = _sensor->read();
+    _current = current;
     _sum = _sum + _current;
     _mean = (_sum / _count);
     if (_current < _min)

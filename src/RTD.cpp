@@ -1,7 +1,8 @@
 #include "RTD.h"
 
-RTD::RTD(RTDType rtdType, numWires wires, int pin)
+RTD::RTD(RTDType rtdType, numWires wires, int pin, const char label[])
 {
+    this->label = label;
     _max31865 = new Adafruit_MAX31865(pin);
     _wires = wires;
     switch (rtdType)
@@ -33,7 +34,7 @@ void RTD::_begin()
         break;
     }
 }
-float RTD::read()
+void RTD::read()
 {
-    return _max31865->temperature(_rNominal, _rRef);
+    quant.sample(_max31865->temperature(_rNominal, _rRef));
 }

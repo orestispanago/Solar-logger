@@ -3,7 +3,7 @@
 Sensor::Sensor()
 {
 }
-float Sensor::read()
+void Sensor::read()
 {
     Serial.println("called read from sensor");
 }
