@@ -11,5 +11,6 @@ public:
     virtual void read();
     Quantity quant;
     const char *label;
+    static int count;
 };
 #endif

@@ -1,12 +1,10 @@
 #include <Arduino.h>
-#include "WiFiMQTTClient.h"
 #include "utils.h"
 #include "RTD.h"
 #include "Pyranometer.h"
-// #include "SensirionThermometer.h"
-// #include "SensirionHygrometer.h"
-// #include "Row.h"
-// #include "MeasurementService.h"
+#include "SensirionThermometer.h"
+#include "SensirionHygrometer.h"
+#include "Logger.h"
 
 unsigned long readInterval = 2000;
 unsigned long uploadInterval = 6000;
@@ -23,54 +21,20 @@ RTD therm2(PT1000, FOUR_WIRE, 16, "Toutput");
 // RTD therm9(PT1000, FOUR_WIRE, 27);
 // RTD therm10(PT1000, FOUR_WIRE, 14);
 
-// ThermoHygrometer sht20;
-// SensirionHygrometer sensirionHygro(&sht20);
-// SensirionThermometer sensirionThermo(&sht20);
+ThermoHygrometer sht20;
+SensirionHygrometer sensirionHygro(&sht20, "RH");
+SensirionThermometer sensirionThermo(&sht20, "Tamb2");
 
 Pyranometer pyranometer("Irr");
 
+int Sensor::count = 0;
 Sensor *sensors[] = {&therm1,
                      &therm2,
+                     &sensirionThermo,
+                     &sensirionHygro,
                      &pyranometer};
 
-int numSensors = sizeof(sensors) / sizeof(sensors[0]);
-
-void readAll()
-{
-  for (int i = 0; i < numSensors; i++)
-  {
-    sensors[i]->read();
-  }
-}
-void printMean()
-{
-  for (int i = 0; i < numSensors; i++)
-  {
-    Serial.print(sensors[i]->label);
-    Serial.print(sensors[i]->quant.mean());
-  }
-  Serial.println();
-}
-
-// Quantity quantities[] = {
-//     Quantity("Tin", &therm1),
-//     Quantity("Tout", &therm2),
-//     Quantity("Tamb", &therm3),
-//     Quantity("Tafb", &therm4),
-//     Quantity("Tafb", &therm5),
-//     Quantity("Taft", &therm6),
-//     Quantity("Tabm", &therm7),
-//     Quantity("Tout", &therm8),
-//     Quantity("Tamb2", &sensirionThermo),
-//     Quantity("RH", &sensirionHygro),
-//     Quantity("Irr", &pyranometer)};
-
-WiFiMQTTClient client;
-
-// int numQuantities = sizeof(quantities) / sizeof(quantities[0]);
-// Row row(quantities, numQuantities);
-
-// MeasurementService ms(&row, &client);
+Logger logger(sensors);
 
 void setup()
 {
@@ -80,16 +44,5 @@ void setup()
 
 void loop()
 {
-  if (client.connected())
-  {
-    // ms.readAtInterval(readInterval);
-    // ms.uploadAtInterval(uploadInterval);
-    // sensors[0]->read();
-    // Serial.print(sensors[0]->label);
-    // sensors[0]->quant.print();
-    readAll();
-    printMean();
-    delay(3000);
-    client.loop();
-  }
+  logger.run(readInterval, uploadInterval);
 }

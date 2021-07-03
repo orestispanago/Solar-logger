@@ -1,11 +1,12 @@
-// #include "SensirionHygrometer.h"
+#include "SensirionHygrometer.h"
 
-// SensirionHygrometer::SensirionHygrometer(ThermoHygrometer *thermoHygrometer)
-// {
-//     _thermoHygrometer = thermoHygrometer;
-// }
+SensirionHygrometer::SensirionHygrometer(ThermoHygrometer *thermoHygrometer, const char label[])
+{
+    this->label = label;
+    _thermoHygrometer = thermoHygrometer;
+}
 
-// float SensirionHygrometer::read()
-// {
-//     return _thermoHygrometer->_sht20.readHumidity();
-// }
+void SensirionHygrometer::read()
+{
+    quant.sample(_thermoHygrometer->_sht20.readHumidity());
+}

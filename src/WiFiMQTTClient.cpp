@@ -10,9 +10,6 @@ WiFiMQTTClient::WiFiMQTTClient()
     String clientId;
 
     WiFiClient espClient;
-    // MQTTClient mqttClient(256);
-    StaticJsonDocument<256> jsonDoc;
-    char payload[256];
     WiFi.mode(WIFI_STA); // config WiFi as client
 }
 
@@ -75,9 +72,9 @@ boolean WiFiMQTTClient::connected()
     return status == 5;
 }
 
-void WiFiMQTTClient::upload(Row *row)
+void WiFiMQTTClient::upload(char *payload)
 {
-    mqttClient.publish(input_topic, row->payload());
+    mqttClient.publish(input_topic, payload);
     mqttClient.loop(); //      give control to MQTT to send message to broker
 }
 

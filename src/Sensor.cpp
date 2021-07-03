@@ -2,8 +2,9 @@
 
 Sensor::Sensor()
 {
+    count++;
 }
 void Sensor::read()
 {
-    Serial.println("called read from sensor");
+    Serial.println("Called read from Sensor (parent class)");
 }

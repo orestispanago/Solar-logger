@@ -5,7 +5,7 @@
 #include "DFRobot_SHT20.h"
 #include "Sensor.h"
 
-class ThermoHygrometer : public Sensor
+class ThermoHygrometer
 {
 public:
     ThermoHygrometer();
