@@ -11,7 +11,7 @@ public:
     Logger(Sensor **sensors);
     void readAtInterval(unsigned long readIinterval);
     void uploadAtInterval(unsigned long uploadInterval);
-    void printPayload();
+    void printAtInterval(unsigned long uploadInterval);
     void run(unsigned long readInterval, unsigned long uploadInterval);
 
 private:
@@ -22,5 +22,6 @@ private:
     char _payload[256];
     void _update();
     void readAll();
+    void _printPayload();
 };
 #endif

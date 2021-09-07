@@ -5,6 +5,7 @@
 #include "SensirionThermometer.h"
 #include "SensirionHygrometer.h"
 #include "Logger.h"
+#include "Flowmeter.h"
 
 unsigned long readInterval = 2000;
 unsigned long uploadInterval = 10000;
@@ -26,23 +27,24 @@ SensirionHygrometer sensirionHygro(&sht20, "RH");
 SensirionThermometer sensirionThermo(&sht20, "Tamb2");
 
 Pyranometer pyranometer("Irr");
+Flowmeter flow(26, "FLOW");
 
 int Sensor::count = 0;
 Sensor *sensors[] = {
-                    &therm1,
-                     &therm2,
-                     &therm3,
-                     &therm4,
-                     &therm5,
-                     &therm6,
-                     &therm7,
-                    //  &therm8,
-                     &therm9,
-                     &therm10,
-                     &sensirionThermo,
-                     &sensirionHygro,
-                     &pyranometer
-                     };
+    &therm1,
+    &therm2,
+    &therm3,
+    &therm4,
+    &therm5,
+    &therm6,
+    &therm7,
+    //  &therm8,
+    &therm9,
+    &therm10,
+    &sensirionThermo,
+    &sensirionHygro,
+    &pyranometer,
+    &flow};
 
 Logger logger(sensors);
 
@@ -50,6 +52,7 @@ void setup()
 {
   Serial.begin(115200);
   printPins();
+  // initFlowmeter(26);
 }
 
 void loop()

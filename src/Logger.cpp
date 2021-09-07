@@ -21,7 +21,8 @@ void Logger::uploadAtInterval(unsigned long uploadInterval)
     {
         _lastUploadMillis = _currentMillis;
         _update();
-        _client.upload(_payload);
+        _printPayload();
+        // _client.upload(_payload);
     }
 }
 void Logger::_update()
@@ -41,9 +42,10 @@ void Logger::readAll()
         _sensors[i]->read();
     }
 }
-void Logger::printPayload()
+void Logger::_printPayload()
 {
-    serializeJson(_jsonDoc, _payload);
+    serializeJson(_jsonDoc, Serial);
+    Serial.println();
 }
 void Logger::run(unsigned long readInterval, unsigned long uploadInterval)
 {
