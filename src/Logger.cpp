@@ -28,10 +28,10 @@ void Logger::_uploadAtInterval()
 }
 void Logger::_update()
 {
-    _jsonDoc["count"] = _sensors[0]->quant.count();
+    _jsonDoc["count"] = _sensors[0]->measurement.count();
     for (int i = 0; i < _sensors[0]->count; i++)
     {
-        _jsonDoc[_sensors[i]->label] = _sensors[i]->quant.mean();
+        _jsonDoc[_sensors[i]->label] = _sensors[i]->measurement.mean();
     }
     //   client.jsonDoc["heapUsage"] = getHeapUsage();
     serializeJson(_jsonDoc, _payload);

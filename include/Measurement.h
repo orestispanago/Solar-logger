@@ -1,10 +1,10 @@
-#ifndef Quantity_h
-#define Quantity_h
+#ifndef Measurement_h
+#define Measurement_h
 
-class Quantity
+class Measurement
 {
 public:
-    Quantity();
+    Measurement();
     unsigned long count();
     float current();
     float sum();

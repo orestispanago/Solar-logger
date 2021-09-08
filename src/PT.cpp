@@ -36,5 +36,5 @@ void PT::_begin()
 }
 void PT::read()
 {
-    quant.sample(_max31865->temperature(_rNominal, _rRef));
+    measurement.sample(_max31865->temperature(_rNominal, _rRef));
 }

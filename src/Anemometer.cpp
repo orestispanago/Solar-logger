@@ -29,6 +29,6 @@ Anemometer::Anemometer(int pin1, const char label[], float calibrationFactor, Ti
 void Anemometer::read()
 {
     _windSpeed = windPulseCount * _calibrationFactor / ((_timer->currentMillis - _timer->lastReadMillis) / 1000);
-    quant.sample(_windSpeed);
+    measurement.sample(_windSpeed);
     windPulseCount = 0;
 }

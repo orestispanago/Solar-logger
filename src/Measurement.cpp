@@ -1,49 +1,49 @@
 #include "Arduino.h"
-#include "Quantity.h"
+#include "Measurement.h"
 
-Quantity::Quantity()
+Measurement::Measurement()
 {
     _min = 999.99;
     _max = -999.99;
 }
 
-float Quantity::current()
+float Measurement::current()
 {
     return _current;
 }
 
-float Quantity::sum()
+float Measurement::sum()
 {
     return _sum;
 }
 
-unsigned long Quantity::count()
+unsigned long Measurement::count()
 {
     return _count;
 }
 
-float Quantity::mean()
+float Measurement::mean()
 {
     _reset();
     return _mean;
 }
 
-float Quantity::min()
+float Measurement::min()
 {
     return _min;
 }
 
-float Quantity::max()
+float Measurement::max()
 {
     return _max;
 }
 
-float Quantity::stdev()
+float Measurement::stdev()
 {
     return _stdev;
 }
 
-void Quantity::_reset()
+void Measurement::_reset()
 {
     _sum = 0.0;
     _count = 0.0;
@@ -52,7 +52,7 @@ void Quantity::_reset()
     _sqDiffMean = 0;
 }
 
-void Quantity::sample(float current)
+void Measurement::sample(float current)
 {
     _count++;
     _current = current;
@@ -70,7 +70,7 @@ void Quantity::sample(float current)
     _stdev = sqrt(_sqDiffMean / _count);
 }
 
-void Quantity::print()
+void Measurement::print()
 {
     Serial.print("count: ");
     Serial.print(_count);

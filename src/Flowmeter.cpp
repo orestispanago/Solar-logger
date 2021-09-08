@@ -29,6 +29,6 @@ Flowmeter::Flowmeter(int pin1, const char label[], float calibrationFactor, Time
 void Flowmeter::read()
 {
     _flow = flowPulseCount * _calibrationFactor / ((_timer->currentMillis - _timer->lastReadMillis) / 1000);
-    quant.sample(_flow);
+    measurement.sample(_flow);
     flowPulseCount = 0;
 }

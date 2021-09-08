@@ -8,5 +8,5 @@ SensirionThermometer::SensirionThermometer(ThermoHygrometer *thermoHygrometer, c
 
 void SensirionThermometer::read()
 {
-    quant.sample(_thermoHygrometer->_sht20.readTemperature());
+    measurement.sample(_thermoHygrometer->_sht20.readTemperature());
 }
