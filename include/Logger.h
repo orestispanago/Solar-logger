@@ -24,6 +24,5 @@ private:
     void _printPayload();
     void _readAtInterval();
     void _uploadAtInterval();
-    void _printAtInterval();
 };
 #endif

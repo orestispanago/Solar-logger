@@ -1,0 +1,138 @@
+@startuml
+'Solar-logger class diagram'
+
+class Sensor{
+    + read() : virtual
+    + measurement : Measurement
+    + label
+    + count
+}
+
+class Measurement{
+    - _count
+    - _current
+    - _sum
+    - _mean
+    - _min
+    - _max
+    - _sqDiffMean
+    - _stdev
+    + count()
+    + current()
+    + sum()
+    + mean()
+    + min()
+    + max()
+    + stdev()
+    + sample(_current)
+    - _reset()
+}
+
+class Timer{
+    + Timer(readIntervalMillis, uploadIntervalMillis)
+    + readInterval
+    + uploadInterval
+    + currentMillis
+    + lastReadMillis
+    + lastUploadMillis
+}
+
+class Anemometer
+{
+    - _pin
+    - _calibrationFactor
+    - _timer : Timer
+    - _windSpeed
+    + Anemometer(pin, label, calibrationFactor, timer)
+    + read()
+}
+
+class Flowmeter
+{
+    - _pin;
+    - _calibrationFactor;
+    - Timer _timer;
+    - _flow;
+    + Flowmeter(pin, label, calibrationFactor, timer)
+    + read();
+}
+
+class Pyranometer{
+    + Pyranometer(label)
+    + read()
+    - _ads : Adafruit_ADS1115
+    - _init()
+}
+
+class PT{
+    + PT(rtdType, wires, pin, label)
+    + read()
+    -_max31865 : Adafruit_MAX31865
+    - _rRef
+    - _rNominal
+    - _wires
+    - _begin()
+}
+
+class ThermoHygrometer{
+    - _sht20 : DFRobot_SHT20
+    - _init()
+}
+
+class SensirionHygrometer{
+    + SensirionHygrometer(thermoHygrometer, label)
+    + read()
+    - _thermoHygrometer : ThermoHygrometer
+}
+
+class SensirionThermometer{
+    + SensirionThermometer(thermoHygrometer, label)
+    + read()
+    - _themoHygrometer : ThermoHygrometer
+}
+
+class WiFiMQTTClient{
+    + WiFiMQTTClient()
+    + connected() : boolean
+    + upload(payload)
+    + loop()
+    - messageSize
+    - status
+    - waitCount
+    - espClient : WiFiClient
+    - clientId
+}
+
+class Logger{
+    + Logger(sensors, timer)
+    + run();
+    - _sensors : Sensor
+    - _timer : Timer
+    - _client : WiFiMQTTClient
+    - _jsonDoc
+    - _payload
+    - _update()
+    - _readAll()
+    - _printPayload()
+    - _readAtInterval()
+    - _uploadAtInterval()
+}
+
+abstract Sensor
+Sensor *-- Measurement
+Sensor <- Anemometer
+Sensor <- Flowmeter
+Sensor <- Pyranometer
+Sensor <- PT
+Sensor <- SensirionThermometer
+Sensor <- SensirionHygrometer
+Anemometer *-- Timer
+Flowmeter *-- Timer
+ThermoHygrometer *- SensirionHygrometer
+ThermoHygrometer *- SensirionThermometer
+
+Logger *- Sensor
+Logger *- Timer
+Logger *- WiFiMQTTClient
+
+@enduml
