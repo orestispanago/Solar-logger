@@ -120,19 +120,19 @@ class Logger{
 
 abstract Sensor
 Sensor *-- Measurement
-Sensor <- Anemometer
-Sensor <- Flowmeter
-Sensor <- Pyranometer
-Sensor <- PT
-Sensor <- SensirionThermometer
-Sensor <- SensirionHygrometer
+Sensor <-- Anemometer
+Sensor <-- Flowmeter
+Sensor <-- Pyranometer
+Sensor <-- PT
+Sensor <-- SensirionThermometer
+Sensor <-- SensirionHygrometer
 Anemometer *-- Timer
 Flowmeter *-- Timer
-ThermoHygrometer *- SensirionHygrometer
-ThermoHygrometer *- SensirionThermometer
+SensirionHygrometer *-- ThermoHygrometer
+SensirionThermometer *-- ThermoHygrometer
 
-Logger *- Sensor
-Logger *- Timer
-Logger *- WiFiMQTTClient
+Logger *-- Sensor
+Logger *-- Timer
+Logger *-- WiFiMQTTClient
 
 @enduml
