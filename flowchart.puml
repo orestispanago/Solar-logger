@@ -1,0 +1,29 @@
+@startuml
+
+
+:Set read and upload intervals; 
+
+:Set **Sensor** pins, labels and calibration factors;
+
+:Initialize **Logger**;
+
+
+repeat :Main loop;
+
+if (Read interval passed) then (yes)
+    :Read all sensors;
+    :Calculate statistics;
+else (no)
+    :continue;
+endif
+
+if (Upload interval passed) then (yes)
+    :Update JSON;
+    :Reset Measurements;
+    :Upload;
+else (no)
+    :continue;
+endif
+
+
+@enduml

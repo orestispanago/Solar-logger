@@ -49,12 +49,12 @@ class Anemometer
 
 class Flowmeter
 {
-    - _pin;
-    - _calibrationFactor;
-    - Timer _timer;
-    - _flow;
+    - _pin
+    - _calibrationFactor
+    - Timer _timer
+    - _flow
     + Flowmeter(pin, label, calibrationFactor, timer)
-    + read();
+    + read()
 }
 
 class Pyranometer{
