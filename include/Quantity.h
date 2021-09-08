@@ -1,8 +1,6 @@
 #ifndef Quantity_h
 #define Quantity_h
 
-// #include "Sensor.h"
-
 class Quantity
 {
 public:
@@ -16,11 +14,8 @@ public:
     float stdev();
     void sample(float current);
     void print();
-    void reset();
-    // const char *label;
 
 private:
-    // Sensor *_sensor;
     unsigned long _count;
     float _current;
     float _sum;
@@ -29,6 +24,7 @@ private:
     float _max;
     float _sqDiffMean;
     float _stdev;
+    void _reset();
 };
 
 #endif

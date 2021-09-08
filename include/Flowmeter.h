@@ -9,11 +9,11 @@ class Flowmeter : public Sensor
 public:
     Flowmeter(int pin1, const char label[], float calibrationFactor, Timer *timer);
     void read();
-    float flow;
 
 private:
     int _pin;
     float _calibrationFactor;
     Timer *_timer;
+    float _flow;
 };
 #endif

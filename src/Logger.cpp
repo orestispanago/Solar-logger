@@ -6,16 +6,16 @@ Logger::Logger(Sensor **sensors, Timer *timer)
     _timer = timer;
 }
 
-void Logger::readAtInterval()
+void Logger::_readAtInterval()
 {
     _timer->currentMillis = millis();
     if (_timer->currentMillis - _timer->lastReadMillis >= _timer->readInterval)
     {
-        readAll();
+        _readAll();
         _timer->lastReadMillis = _timer->currentMillis;
     }
 }
-void Logger::uploadAtInterval()
+void Logger::_uploadAtInterval()
 {
     _timer->currentMillis = millis();
     if (_timer->currentMillis - _timer->lastUploadMillis >= _timer->uploadInterval)
@@ -36,7 +36,7 @@ void Logger::_update()
     //   client.jsonDoc["heapUsage"] = getHeapUsage();
     serializeJson(_jsonDoc, _payload);
 }
-void Logger::readAll()
+void Logger::_readAll()
 {
     for (int i = 0; i < _sensors[0]->count; i++)
     {
@@ -52,8 +52,8 @@ void Logger::run()
 {
     if (_client.connected())
     {
-        readAtInterval();
-        uploadAtInterval();
+        _readAtInterval();
+        _uploadAtInterval();
         _client.loop();
     }
 }

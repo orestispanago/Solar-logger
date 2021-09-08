@@ -24,7 +24,7 @@ unsigned long Quantity::count()
 
 float Quantity::mean()
 {
-    reset();
+    _reset();
     return _mean;
 }
 
@@ -43,7 +43,7 @@ float Quantity::stdev()
     return _stdev;
 }
 
-void Quantity::reset()
+void Quantity::_reset()
 {
     _sum = 0.0;
     _count = 0.0;

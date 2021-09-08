@@ -1,11 +1,11 @@
-#include "RTD.h"
+#include "PT.h"
 
-RTD::RTD(RTDType rtdType, numWires wires, int pin, const char label[])
+PT::PT(PTType ptType, numWires wires, int pin, const char label[])
 {
     this->label = label;
     _max31865 = new Adafruit_MAX31865(pin);
     _wires = wires;
-    switch (rtdType)
+    switch (ptType)
     {
     case PT100:
         _rRef = 430.0;
@@ -19,7 +19,7 @@ RTD::RTD(RTDType rtdType, numWires wires, int pin, const char label[])
     _begin();
 }
 
-void RTD::_begin()
+void PT::_begin()
 {
     switch (_wires)
     {
@@ -34,7 +34,7 @@ void RTD::_begin()
         break;
     }
 }
-void RTD::read()
+void PT::read()
 {
     quant.sample(_max31865->temperature(_rNominal, _rRef));
 }

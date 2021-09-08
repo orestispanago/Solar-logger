@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include "utils.h"
-#include "RTD.h"
+#include "PT.h"
 #include "Pyranometer.h"
 #include "SensirionThermometer.h"
 #include "SensirionHygrometer.h"
@@ -11,17 +11,17 @@
 unsigned long readInterval = 2000;
 unsigned long uploadInterval = 10000;
 
-RTD therm1(PT1000, FOUR_WIRE, 17, "ABD");
-RTD therm2(PT1000, FOUR_WIRE, 16, "ABU");
-RTD therm3(PT1000, FOUR_WIRE, 4, "AFD");
-RTD therm4(PT1000, FOUR_WIRE, 0, "AFMD");
+PT therm1(PT1000, FOUR_WIRE, 17, "ABD");
+PT therm2(PT1000, FOUR_WIRE, 16, "ABU");
+PT therm3(PT1000, FOUR_WIRE, 4, "AFD");
+PT therm4(PT1000, FOUR_WIRE, 0, "AFMD");
 
-RTD therm5(PT1000, FOUR_WIRE, 32, "AFMU");
-RTD therm6(PT1000, FOUR_WIRE, 33, "AFU");
-RTD therm7(PT1000, FOUR_WIRE, 25, "IM");
-// // RTD therm8(PT1000, FOUR_WIRE, 26);
-RTD therm9(PT100, FOUR_WIRE, 27, "OUT");
-RTD therm10(PT100, FOUR_WIRE, 14, "IN");
+PT therm5(PT1000, FOUR_WIRE, 32, "AFMU");
+PT therm6(PT1000, FOUR_WIRE, 33, "AFU");
+PT therm7(PT1000, FOUR_WIRE, 25, "IM");
+// // PT therm8(PT1000, FOUR_WIRE, 26);
+PT therm9(PT100, FOUR_WIRE, 27, "OUT");
+PT therm10(PT100, FOUR_WIRE, 14, "IN");
 
 ThermoHygrometer sht20;
 SensirionHygrometer sensirionHygro(&sht20, "RH");

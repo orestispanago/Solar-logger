@@ -1,11 +1,11 @@
-#ifndef RTD_h
-#define RTD_h
+#ifndef PT_h
+#define PT_h
 #include <Wire.h>
 #include <Adafruit_MAX31865.h>
 #include "Sensor.h"
 
 
-enum RTDType
+enum PTType
 {
     PT100,
     PT1000
@@ -18,10 +18,10 @@ enum numWires
     FOUR_WIRE
 };
 
-class RTD : public Sensor
+class PT : public Sensor
 {
 public:
-    RTD(RTDType rtdType, numWires wires, int pin, const char label[]);
+    PT(PTType rtdType, numWires wires, int pin, const char label[]);
     void read();
 
 private:
