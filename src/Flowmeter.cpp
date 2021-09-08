@@ -30,6 +30,5 @@ void Flowmeter::read()
 {
     flow = flowPulseCount * _calibrationFactor / ((_timer->currentMillis - _timer->lastReadMillis) / 1000);
     quant.sample(flow);
-    _timer->lastReadMillis = _timer->currentMillis;
     flowPulseCount = 0;
 }

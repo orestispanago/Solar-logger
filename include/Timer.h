@@ -5,7 +5,7 @@
 class Timer
 {
 public:
-    Timer(unsigned long readInterval, unsigned long uploadInterval);
+    Timer(unsigned long readIntervalMillis, unsigned long uploadIntervalMillis);
     unsigned long readInterval,
         uploadInterval,
         currentMillis,

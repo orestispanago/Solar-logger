@@ -1,8 +1,9 @@
 #include "Timer.h"
 
-Timer::Timer(unsigned long readInterval, unsigned long uploadInterval)
+Timer::Timer(unsigned long readIntervalMillis, unsigned long uploadIntervalMillis)
 {
-    readInterval = readInterval;
-    uploadInterval = uploadInterval;
-    lastUploadMillis = millis();
+    readInterval = readIntervalMillis;
+    uploadInterval = uploadIntervalMillis;
+    // lastUploadMillis = millis();
+    // lastReadMillis = millis();
 }

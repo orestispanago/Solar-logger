@@ -6,7 +6,6 @@
 #include "SensirionHygrometer.h"
 #include "Logger.h"
 #include "Flowmeter.h"
-#include "Timer.h"
 #include "Anemometer.h"
 
 unsigned long readInterval = 2000;
@@ -53,7 +52,7 @@ Sensor *sensors[] = {
     &anemometer,
     &flow};
 
-Logger logger(sensors);
+Logger logger(sensors, &timer);
 
 void setup()
 {
@@ -63,5 +62,5 @@ void setup()
 
 void loop()
 {
-  logger.run(readInterval, uploadInterval);
+  logger.run();
 }

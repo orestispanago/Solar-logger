@@ -1,25 +1,26 @@
 #include "Logger.h"
 
-Logger::Logger(Sensor **sensors)
+Logger::Logger(Sensor **sensors, Timer *timer)
 {
     _sensors = sensors;
+    _timer = timer;
 }
 
-void Logger::readAtInterval(unsigned long readInterval)
+void Logger::readAtInterval()
 {
-    _currentMillis = millis();
-    if (_currentMillis - _lastReadMillis >= readInterval)
+    _timer->currentMillis = millis();
+    if (_timer->currentMillis - _timer->lastReadMillis >= _timer->readInterval)
     {
-        _lastReadMillis = _currentMillis;
         readAll();
+        _timer->lastReadMillis = _timer->currentMillis;
     }
 }
-void Logger::uploadAtInterval(unsigned long uploadInterval)
+void Logger::uploadAtInterval()
 {
-    _currentMillis = millis();
-    if (_currentMillis - _lastUploadMillis >= uploadInterval)
+    _timer->currentMillis = millis();
+    if (_timer->currentMillis - _timer->lastUploadMillis >= _timer->uploadInterval)
     {
-        _lastUploadMillis = _currentMillis;
+        _timer->lastUploadMillis = _timer->currentMillis;
         _update();
         _printPayload();
         // _client.upload(_payload);
@@ -47,12 +48,12 @@ void Logger::_printPayload()
     serializeJson(_jsonDoc, Serial);
     Serial.println();
 }
-void Logger::run(unsigned long readInterval, unsigned long uploadInterval)
+void Logger::run()
 {
     if (_client.connected())
     {
-        readAtInterval(readInterval);
-        uploadAtInterval(uploadInterval);
+        readAtInterval();
+        uploadAtInterval();
         _client.loop();
     }
 }
