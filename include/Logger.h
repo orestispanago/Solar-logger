@@ -4,23 +4,25 @@
 #include "Sensor.h"
 #include "WiFiMQTTClient.h"
 #include "ArduinoJson.h"
+#include "Timer.h"
 
 class Logger
 {
 public:
-    Logger(Sensor **sensors);
-    void readAtInterval(unsigned long readIinterval);
-    void uploadAtInterval(unsigned long uploadInterval);
-    void printPayload();
-    void run(unsigned long readInterval, unsigned long uploadInterval);
+    Logger(Sensor **sensors, Timer *timer);
+    void run();
 
 private:
     Sensor **_sensors;
+    Timer *_timer;
     WiFiMQTTClient _client;
-    unsigned long _currentMillis, _lastReadMillis, _lastUploadMillis;
+    // unsigned long _currentMillis, _lastReadMillis, _lastUploadMillis;
     StaticJsonDocument<256> _jsonDoc;
     char _payload[256];
     void _update();
-    void readAll();
+    void _readAll();
+    void _printPayload();
+    void _readAtInterval();
+    void _uploadAtInterval();
 };
 #endif

@@ -1,0 +1,34 @@
+@startuml
+
+
+:Set sampling and upload intervals;
+
+:Set **Sensor** pins, labels and calibration factors;
+
+:Initialize **Logger**;
+
+
+repeat :Check connection
+if (Connected to WiFi and MQTT broker) then (yes)
+    if (Sampling interval passed) then (yes)
+        :Read sensors data;
+        :Calculate physical quantities;
+        :Calculate statistics;
+    else (no)
+        :continue;
+    endif
+
+    if (Upload interval passed) then (yes)
+        :Add measurements to JSON;
+        :Reset measurement values;
+        :Publish JSON to MQTT broker;
+    else (no)
+        :continue;
+    endif
+
+    :Keep MQTT connection alive;
+else (no)
+    :continue;
+endif
+
+@enduml

@@ -2,14 +2,14 @@
 #define Sensor_h
 
 #include <Arduino.h>
-#include "Quantity.h"
+#include "Measurement.h"
 
 class Sensor
 {
 public:
     Sensor();
     virtual void read();
-    Quantity quant;
+    Measurement measurement;
     const char *label;
     static int count;
 };

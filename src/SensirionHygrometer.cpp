@@ -8,5 +8,5 @@ SensirionHygrometer::SensirionHygrometer(ThermoHygrometer *thermoHygrometer, con
 
 void SensirionHygrometer::read()
 {
-    quant.sample(_thermoHygrometer->_sht20.readHumidity());
+    measurement.sample(_thermoHygrometer->_sht20.readHumidity());
 }
