@@ -3,34 +3,93 @@
 
 Measurement::Measurement()
 {
+    _min = 999.99;
+    _max = -999.99;
+    _count = 0;
+    _sum = 0.0;
+    _current = 0.0;
+    _mean = 0.0;
+    _sqDiffMean = 0.0;
+    _stdev = 0.0;
 }
 
-float Measurement::getCurrent()
+float Measurement::current()
 {
-    return current;
+    return _current;
 }
 
-float Measurement::getTotal()
+float Measurement::sum()
 {
-    return total;
+    return _sum;
 }
 
-float Measurement::average()
+unsigned long Measurement::count()
 {
-    total = 0.0;
-    count = 0.0;
-    return _average;
+    return _count;
 }
 
-long Measurement::getCount()
+float Measurement::mean()
 {
-    return count;
+    _reset();
+    return _mean;
 }
 
-void Measurement::sample(float newVal)
+float Measurement::min()
 {
-    count++;
-    current = newVal;
-    total = total + current;
-    _average = (total / count);
+    return _min;
+}
+
+float Measurement::max()
+{
+    return _max;
+}
+
+float Measurement::stdev()
+{
+    return _stdev;
+}
+
+void Measurement::_reset()
+{
+    _sum = 0.0;
+    _count = 0.0;
+    _min = 999.99;
+    _max = -999.99;
+    _sqDiffMean = 0;
+}
+
+void Measurement::sample(float current)
+{
+    _count++;
+    _current = current;
+    _sum = _sum + _current;
+    _mean = (_sum / _count);
+    if (_current < _min)
+    {
+        _min = _current;
+    }
+    if (_current > _max)
+    {
+        _max = _current;
+    }
+    _sqDiffMean += sq(_current - _mean);
+    _stdev = sqrt(_sqDiffMean / _count);
+}
+
+void Measurement::print()
+{
+    Serial.print("count: ");
+    Serial.print(_count);
+    Serial.print(", current: ");
+    Serial.print(_current);
+    Serial.print(", sum: ");
+    Serial.print(_sum);
+    Serial.print(", mean: ");
+    Serial.print(_mean);
+    Serial.print(", min: ");
+    Serial.print(_min);
+    Serial.print(", max: ");
+    Serial.print(_max);
+    Serial.print(", std: ");
+    Serial.println(_stdev);
 }
