@@ -5,12 +5,6 @@
 #include "Sensor.h"
 
 
-enum PTType
-{
-    PT100,
-    PT1000
-};
-
 enum numWires
 {
     TWO_WIRE,
@@ -21,7 +15,7 @@ enum numWires
 class PT : public Sensor
 {
 public:
-    PT(PTType rtdType, numWires wires, int pin, const char label[]);
+    PT(int rNominal, numWires wires, int pin, const char label[]);
     void read();
 
 private:

@@ -1,21 +1,21 @@
-#ifndef Logger_h
-#define Logger_h
+#ifndef LoggerService_h
+#define LoggerService_h
 
 #include "Sensor.h"
-#include "WiFiMQTTClient.h"
+#include "ConnectionService.h"
 #include "ArduinoJson.h"
 #include "Timer.h"
 
-class Logger
+class LoggerService
 {
 public:
-    Logger(Sensor **sensors, Timer *timer, int numSensors);
+    LoggerService(Sensor **sensors, Timer *timer, int numSensors);
     void run();
 
 private:
     Sensor **_sensors;
     Timer *_timer;
-    WiFiMQTTClient _client;
+    ConnectionService _connectionService;
     StaticJsonDocument<256> _jsonDoc;
     char _payload[256];
     void _update();

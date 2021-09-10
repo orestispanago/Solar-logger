@@ -1,9 +1,9 @@
-#include <WiFiMQTTClient.h>
-#include <credentials.h>
+#include "ConnectionService.h"
+#include "credentials.h"
 
 MQTTClient mqttClient(256);
 
-WiFiMQTTClient::WiFiMQTTClient()
+ConnectionService::ConnectionService()
 {
     unsigned long waitCount;
     uint8_t status;
@@ -13,7 +13,7 @@ WiFiMQTTClient::WiFiMQTTClient()
     WiFi.mode(WIFI_STA); // config WiFi as client
 }
 
-boolean WiFiMQTTClient::connected()
+boolean ConnectionService::isConnected()
 {
     // Connection status for WiFi and MQTT:
     //
@@ -72,13 +72,13 @@ boolean WiFiMQTTClient::connected()
     return status == 5;
 }
 
-void WiFiMQTTClient::upload(char *payload)
+void ConnectionService::upload(char *payload)
 {
     mqttClient.publish(input_topic, payload);
     mqttClient.loop(); //      give control to MQTT to send message to broker
 }
 
-void WiFiMQTTClient::loop()
+void ConnectionService::loop()
 {
     mqttClient.loop();
 }

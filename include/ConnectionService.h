@@ -1,14 +1,14 @@
-#ifndef WiFiMQTTClient_h
-#define WiFiMQTTClient_h
-#include "Arduino.h"
+#ifndef ConnectionService_h
+#define ConnectionService_h
+#include <Arduino.h>
 #include <WiFi.h>
 #include <MQTTClient.h> // MQTT Client from Joël Gaehwiler https://github.com/256dpi/arduino-mqtt   keepalive manually to 15s
 
-class WiFiMQTTClient
+class ConnectionService
 {
 public:
-    WiFiMQTTClient();
-    boolean connected();
+    ConnectionService();
+    boolean isConnected();
     void upload(char *payload);
     void loop();
 

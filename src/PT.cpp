@@ -1,21 +1,21 @@
 #include "PT.h"
 
-PT::PT(PTType ptType, numWires wires, int pin, const char label[])
+PT::PT(int rNominal, numWires wires, int pin, const char label[])
 {
     this->label = label;
     _max31865 = new Adafruit_MAX31865(pin);
     _wires = wires;
-    switch (ptType)
+    switch (rNominal)
     {
-    case PT100:
+    case 100:
         _rRef = 430.0;
         _rNominal = 100.0;
         break;
-    case PT1000:
+    case 1000:
         _rRef = 4300.0;
-        _rNominal = 1000.0;
         break;
     }
+    _rNominal = rNominal;
     _begin();
 }
 

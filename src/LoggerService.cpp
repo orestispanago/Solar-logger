@@ -1,13 +1,13 @@
-#include "Logger.h"
+#include "LoggerService.h"
 
-Logger::Logger(Sensor **sensors, Timer *timer, int numSensors)
+LoggerService::LoggerService(Sensor **sensors, Timer *timer, int numSensors)
 {
     _sensors = sensors;
     _timer = timer;
     _numSensors = numSensors;
 }
 
-void Logger::_readAtInterval()
+void LoggerService::_readAtInterval()
 {
     _timer->currentMillis = millis();
     if (_timer->currentMillis - _timer->lastReadMillis >= _timer->readInterval)
@@ -16,7 +16,7 @@ void Logger::_readAtInterval()
         _timer->lastReadMillis = _timer->currentMillis;
     }
 }
-void Logger::_uploadAtInterval()
+void LoggerService::_uploadAtInterval()
 {
     _timer->currentMillis = millis();
     if (_timer->currentMillis - _timer->lastUploadMillis >= _timer->uploadInterval)
@@ -27,7 +27,7 @@ void Logger::_uploadAtInterval()
         // _client.upload(_payload);
     }
 }
-void Logger::_update()
+void LoggerService::_update()
 {
     _jsonDoc["count"] = _sensors[0]->measurement.count();
     for (int i = 0; i < _numSensors; i++)
@@ -37,24 +37,24 @@ void Logger::_update()
     //   client.jsonDoc["heapUsage"] = getHeapUsage();
     serializeJson(_jsonDoc, _payload);
 }
-void Logger::_readAll()
+void LoggerService::_readAll()
 {
     for (int i = 0; i < _numSensors; i++)
     {
         _sensors[i]->read();
     }
 }
-void Logger::_printPayload()
+void LoggerService::_printPayload()
 {
     serializeJson(_jsonDoc, Serial);
     Serial.println();
 }
-void Logger::run()
+void LoggerService::run()
 {
-    if (_client.connected())
+    if (_connectionService.isConnected())
     {
         _readAtInterval();
         _uploadAtInterval();
-        _client.loop();
+        _connectionService.loop();
     }
 }
