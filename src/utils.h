@@ -30,4 +30,7 @@ float getHeapUsage()
     return 100 * (1.0 * ESP.getFreeHeap() / ESP.getHeapSize());
 }
 
+template <class T, size_t N>
+constexpr size_t len(const T (&)[N]) { return N; }
+
 #endif

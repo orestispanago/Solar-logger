@@ -8,9 +8,8 @@ class Sensor
 {
 public:
     Sensor();
-    virtual void read();
+    virtual void read() = 0; // = 0 means read() is not implemented (makes class abstract)
     Measurement measurement;
     const char *label;
-    static int count;
 };
 #endif

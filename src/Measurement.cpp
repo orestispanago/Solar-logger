@@ -5,6 +5,12 @@ Measurement::Measurement()
 {
     _min = 999.99;
     _max = -999.99;
+    _count = 0;
+    _sum = 0.0;
+    _current = 0.0;
+    _mean = 0.0;
+    _sqDiffMean = 0.0;
+    _stdev = 0.0;
 }
 
 float Measurement::current()

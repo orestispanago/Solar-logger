@@ -1,9 +1,10 @@
 #include "Logger.h"
 
-Logger::Logger(Sensor **sensors, Timer *timer)
+Logger::Logger(Sensor **sensors, Timer *timer, int numSensors)
 {
     _sensors = sensors;
     _timer = timer;
+    _numSensors = numSensors;
 }
 
 void Logger::_readAtInterval()
@@ -29,7 +30,7 @@ void Logger::_uploadAtInterval()
 void Logger::_update()
 {
     _jsonDoc["count"] = _sensors[0]->measurement.count();
-    for (int i = 0; i < _sensors[0]->count; i++)
+    for (int i = 0; i < _numSensors; i++)
     {
         _jsonDoc[_sensors[i]->label] = _sensors[i]->measurement.mean();
     }
@@ -38,7 +39,7 @@ void Logger::_update()
 }
 void Logger::_readAll()
 {
-    for (int i = 0; i < _sensors[0]->count; i++)
+    for (int i = 0; i < _numSensors; i++)
     {
         _sensors[i]->read();
     }

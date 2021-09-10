@@ -4,6 +4,4 @@ Timer::Timer(unsigned long readIntervalMillis, unsigned long uploadIntervalMilli
 {
     readInterval = readIntervalMillis;
     uploadInterval = uploadIntervalMillis;
-    // lastUploadMillis = millis();
-    // lastReadMillis = millis();
 }

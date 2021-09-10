@@ -13,8 +13,6 @@ public:
     void loop();
 
 private:
-    int16_t messageSize = 256;
-    // MQTTClient mqttClient;
     uint8_t status;
     unsigned long waitCount;
     WiFiClient espClient;

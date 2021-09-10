@@ -11,9 +11,6 @@ public:
         currentMillis,
         lastReadMillis,
         lastUploadMillis;
-
-private:
-    Timer *_timer;
 };
 
 #endif

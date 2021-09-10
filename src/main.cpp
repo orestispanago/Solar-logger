@@ -8,51 +8,28 @@
 #include "Flowmeter.h"
 #include "Anemometer.h"
 
-unsigned long readInterval = 2000;
-unsigned long uploadInterval = 10000;
-
-PT therm1(PT1000, FOUR_WIRE, 17, "ABD");
-PT therm2(PT1000, FOUR_WIRE, 16, "ABU");
-PT therm3(PT1000, FOUR_WIRE, 4, "AFD");
-PT therm4(PT1000, FOUR_WIRE, 0, "AFMD");
-
-PT therm5(PT1000, FOUR_WIRE, 32, "AFMU");
-PT therm6(PT1000, FOUR_WIRE, 33, "AFU");
-PT therm7(PT1000, FOUR_WIRE, 25, "IM");
-// // PT therm8(PT1000, FOUR_WIRE, 26);
-PT therm9(PT100, FOUR_WIRE, 27, "OUT");
-PT therm10(PT100, FOUR_WIRE, 14, "IN");
+Timer timer(2000, 10000); // sampling, upload interval in milliseconds
 
 ThermoHygrometer sht20;
-SensirionHygrometer sensirionHygro(&sht20, "RH");
-SensirionThermometer sensirionThermo(&sht20, "Tamb2");
 
-Pyranometer pyranometer("Irr");
-
-Timer timer(readInterval, uploadInterval);
-
-Anemometer anemometer(12, "WS", 1.25, &timer);
-Flowmeter flow(13, "FLOW", 1.25, &timer);
-
-int Sensor::count = 0;
 Sensor *sensors[] = {
-    &therm1,
-    &therm2,
-    &therm3,
-    &therm4,
-    &therm5,
-    &therm6,
-    &therm7,
-    //  &therm8,
-    &therm9,
-    &therm10,
-    &sensirionThermo,
-    &sensirionHygro,
-    &pyranometer,
-    &anemometer,
-    &flow};
+    new PT(PT1000, FOUR_WIRE, 17, "ABD"),
+    new PT(PT1000, FOUR_WIRE, 16, "ABU"),
+    new PT(PT1000, FOUR_WIRE, 4, "AFD"),
+    new PT(PT1000, FOUR_WIRE, 0, "AFMD"),
+    new PT(PT1000, FOUR_WIRE, 32, "AFMU"),
+    new PT(PT1000, FOUR_WIRE, 33, "AFU"),
+    new PT(PT1000, FOUR_WIRE, 25, "IM"),
+    new PT(PT100, FOUR_WIRE, 27, "OUT"),
+    new PT(PT100, FOUR_WIRE, 14, "IN"),
+    new SensirionThermometer(&sht20, "Tamb2"),
+    new SensirionHygrometer(&sht20, "RH"),
+    new Pyranometer("Irr"),
+    new Anemometer(12, "WS", 1.25, &timer),
+    new Flowmeter(13, "FLOW", 1800, &timer),
+};
 
-Logger logger(sensors, &timer);
+Logger logger(sensors, &timer, len(sensors));
 
 void setup()
 {
