@@ -7,13 +7,15 @@
 class Flowmeter : public Sensor
 {
 public:
-    Flowmeter(int pin1, const char label[], float calibrationFactor, Timer *timer);
+    Flowmeter(int pin1, const char label[], float pulsesPerLitre, Timer *timer);
     void read();
 
 private:
     int _pin;
-    float _calibrationFactor;
+    float _pulsesPerLitre;
     Timer *_timer;
-    float _flow;
+    float _frequency();
+    float _litresPerSecond();
+    float _litresPerHour();
 };
 #endif

@@ -23,8 +23,8 @@ void LoggerService::_uploadAtInterval()
     {
         _timer->lastUploadMillis = _timer->currentMillis;
         _update();
-        _printPayload();
-        // _client.upload(_payload);
+        // _printPayload();
+        _connectionService.upload(_payload);
     }
 }
 void LoggerService::_update()

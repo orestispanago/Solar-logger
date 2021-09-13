@@ -39,22 +39,25 @@ class Timer{
 
 class Anemometer
 {
-    - _pin
-    - _calibrationFactor
-    - _timer : Timer
-    - _windSpeed
-    + Anemometer(pin, label, calibrationFactor, timer)
+    + Anemometer(pin, label, pulsesPerMetre, timer)
     + read()
+    - _pin
+    - _timer : Timer
+    - _pulsesPerMetre
+    - _frequency()
+    - _metresPerSecond()
 }
 
 class Flowmeter
 {
-    - _pin
-    - _calibrationFactor
-    - Timer _timer
-    - _flow
-    + Flowmeter(pin, label, calibrationFactor, timer)
+    + Flowmeter(pin, label, pulsesPerLitre, timer)
     + read()
+    - _pin
+    - _pulsesPerLitre
+    - Timer _timer
+    - _frequency()
+    - _litresPerSecond()
+    - _litresPerHour()
 }
 
 class Pyranometer{

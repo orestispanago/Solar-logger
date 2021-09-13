@@ -17,18 +17,29 @@ void initAnemometer(int pin)
     attachInterrupt(digitalPinToInterrupt(pin), windPulseCounter, FALLING);
 }
 
-Anemometer::Anemometer(int pin1, const char label[], float calibrationFactor, Timer *timer)
+Anemometer::Anemometer(int pin1, const char label[], float pulsesPerMetre, Timer *timer)
 {
     _pin = pin1;
     this->label = label;
     initAnemometer(_pin);
     _timer = timer;
-    _calibrationFactor = calibrationFactor;
+    _pulsesPerMetre = pulsesPerMetre;
+}
+
+float Anemometer::_frequency()
+{
+    // Hz = pulseCount / timedelta in seconds
+    return windPulseCount * 1000 / (_timer->currentMillis - _timer->lastReadMillis);
+}
+
+float Anemometer::_metresPerSecond()
+{
+    // Transfer function: m/s = Hz / pulsesPerMetre
+    return _frequency() * _pulsesPerMetre;
 }
 
 void Anemometer::read()
 {
-    _windSpeed = windPulseCount * _calibrationFactor / ((_timer->currentMillis - _timer->lastReadMillis) / 1000);
-    measurement.sample(_windSpeed);
+    measurement.sample(_metresPerSecond());
     windPulseCount = 0;
 }

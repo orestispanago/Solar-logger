@@ -17,18 +17,34 @@ void initFlowmeter(int pin)
     attachInterrupt(digitalPinToInterrupt(pin), flowPulseCounter, FALLING);
 }
 
-Flowmeter::Flowmeter(int pin1, const char label[], float calibrationFactor, Timer *timer)
+Flowmeter::Flowmeter(int pin1, const char label[], float pulsesPerLitre, Timer *timer)
 {
     _pin = pin1;
     this->label = label;
     initFlowmeter(_pin);
     _timer = timer;
-    _calibrationFactor = calibrationFactor;
+    _pulsesPerLitre = pulsesPerLitre;
+}
+
+float Flowmeter::_frequency()
+{
+    // Hz = pulseCount / timedelta in seconds
+    return flowPulseCount * 1000.0 / (_timer->currentMillis - _timer->lastReadMillis);
+}
+
+float Flowmeter::_litresPerSecond()
+{
+    // Transfer function: L/s = Hz / pulsesPerLitre
+    return _frequency() / _pulsesPerLitre;
+}
+
+float Flowmeter::_litresPerHour()
+{
+    return _litresPerSecond() * 3600;
 }
 
 void Flowmeter::read()
 {
-    _flow = flowPulseCount * _calibrationFactor / ((_timer->currentMillis - _timer->lastReadMillis) / 1000);
-    measurement.sample(_flow);
+    measurement.sample(_litresPerHour());
     flowPulseCount = 0;
 }
