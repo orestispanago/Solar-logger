@@ -13,20 +13,21 @@ Timer timer(2000, 10000); // sampling, upload interval in milliseconds
 ThermoHygrometer sht20;
 
 Sensor *sensors[] = {
-    new PT(1000, FOUR_WIRE, 17, "ABD"),
-    new PT(1000, FOUR_WIRE, 16, "ABU"),
-    new PT(1000, FOUR_WIRE, 4, "AFD"),
-    new PT(100, FOUR_WIRE, 0, "SOUT"),
-    new PT(100, FOUR_WIRE, 32, "SIN"),
-    new PT(1000, FOUR_WIRE, 33, "AFU"),
-    new PT(1000, FOUR_WIRE, 25, "IM"),
-    new PT(100, FOUR_WIRE, 27, "OUT"),
-    new PT(100, FOUR_WIRE, 14, "IN"),
-    new SensirionThermometer(&sht20, "Tamb2"),
+    new PT(1000, FOUR_WIRE, 17, "Tabd"),
+    new PT(1000, FOUR_WIRE, 16, "Tabu"),
+    new PT(1000, FOUR_WIRE, 4, "Tafd"),
+    new PT(1000, FOUR_WIRE, 0, "Tafmd"),
+    new PT(1000, FOUR_WIRE, 32, "Tafmu"),
+    new PT(1000, FOUR_WIRE, 33, "Tafu"),
+    new PT(1000, FOUR_WIRE, 25, "Tim"),
+    new PT(1000, FOUR_WIRE, 26, "Tenv"),
+    new PT(100, FOUR_WIRE, 27, "Tout"),
+    new PT(100, FOUR_WIRE, 14, "Tin"),
+    new SensirionThermometer(&sht20, "Tenv2"),
     new SensirionHygrometer(&sht20, "RH"),
     new Pyranometer("Irr"),
-    new Anemometer(12, "WS", 1.25, &timer),
-    new Flowmeter(13, "FLOW", 1800, &timer),
+    new Anemometer(12, "Wind", 1.25, &timer),
+    new Flowmeter(13, "Flow", 1800, &timer),
 };
 
 LoggerService loggerService(sensors, &timer, len(sensors));
