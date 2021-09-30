@@ -1,6 +1,6 @@
-#include "LoggerService.h"
+#include "Logger.h"
 
-LoggerService::LoggerService(Sensor **sensors, Timer *timer, int numSensors)
+Logger::Logger(Sensor **sensors, Timer *timer, int numSensors)
 {
     _sensors = sensors;
     _timer = timer;
@@ -8,7 +8,7 @@ LoggerService::LoggerService(Sensor **sensors, Timer *timer, int numSensors)
     _appendCharacterToSensorLabels("S");
 }
 
-void LoggerService::_readAtInterval()
+void Logger::_readAtInterval()
 {
     _timer->currentMillis = millis();
     if (_timer->currentMillis - _timer->lastReadMillis >= _timer->readInterval)
@@ -17,7 +17,7 @@ void LoggerService::_readAtInterval()
         _timer->lastReadMillis = _timer->currentMillis;
     }
 }
-void LoggerService::_uploadAtInterval()
+void Logger::_uploadAtInterval()
 {
     _timer->currentMillis = millis();
     if (_timer->currentMillis - _timer->lastUploadMillis >= _timer->uploadInterval)
@@ -25,10 +25,10 @@ void LoggerService::_uploadAtInterval()
         _timer->lastUploadMillis = _timer->currentMillis;
         _update();
         _printPayload();
-        // _connectionService.upload(_payload);
+        // _Connection.upload(_payload);
     }
 }
-void LoggerService::_update()
+void Logger::_update()
 {
     _jsonDoc["count"] = _sensors[0]->measurement.count();
     for (int i = 0; i < _numSensors; i++)
@@ -40,28 +40,28 @@ void LoggerService::_update()
     }
     serializeJson(_jsonDoc, _payload);
 }
-void LoggerService::_readAll()
+void Logger::_readAll()
 {
     for (int i = 0; i < _numSensors; i++)
     {
         _sensors[i]->read();
     }
 }
-void LoggerService::_printPayload()
+void Logger::_printPayload()
 {
     serializeJson(_jsonDoc, Serial);
     Serial.println();
 }
-void LoggerService::run()
+void Logger::run()
 {
-    if (_connectionService.isConnected())
+    if (_Connection.statusOK())
     {
         _readAtInterval();
         _uploadAtInterval();
-        _connectionService.loop();
+        _Connection.loop();
     }
 }
-void LoggerService::_appendCharacterToSensorLabels(char character[2])
+void Logger::_appendCharacterToSensorLabels(char character[2])
 {
     for (int i = 0; i < _numSensors; i++)
     {

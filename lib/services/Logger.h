@@ -1,22 +1,22 @@
-#ifndef LoggerService_h
-#define LoggerService_h
+#ifndef Logger_h
+#define Logger_h
 
 #include "Sensor.h"
-#include "ConnectionService.h"
+#include "Connection.h"
 #include "ArduinoJson.h"
 #include "Timer.h"
 
-class LoggerService
+class Logger
 {
 
 public:
-    LoggerService(Sensor **sensors, Timer *timer, int numSensors);
+    Logger(Sensor **sensors, Timer *timer, int numSensors);
     void run();
 
 private:
     Sensor **_sensors;
     Timer *_timer;
-    ConnectionService _connectionService;
+    Connection _Connection;
     StaticJsonDocument<MESSAGE_SIZE> _jsonDoc;
     char _payload[MESSAGE_SIZE];
     void _update();
