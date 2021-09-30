@@ -1,7 +1,8 @@
 #include "ConnectionService.h"
 #include "credentials.h"
 
-MQTTClient mqttClient(256);
+
+MQTTClient mqttClient(MESSAGE_SIZE);
 
 ConnectionService::ConnectionService()
 {

@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include "utils.h"
 #include "PT.h"
 #include "Pyranometer.h"
@@ -35,7 +34,7 @@ LoggerService loggerService(sensors, &timer, len(sensors));
 void setup()
 {
   Serial.begin(115200);
-  printPins();
+  // printPins();
 }
 
 void loop()

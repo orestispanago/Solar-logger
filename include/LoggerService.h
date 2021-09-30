@@ -8,6 +8,7 @@
 
 class LoggerService
 {
+
 public:
     LoggerService(Sensor **sensors, Timer *timer, int numSensors);
     void run();
@@ -16,13 +17,14 @@ private:
     Sensor **_sensors;
     Timer *_timer;
     ConnectionService _connectionService;
-    StaticJsonDocument<256> _jsonDoc;
-    char _payload[256];
+    StaticJsonDocument<MESSAGE_SIZE> _jsonDoc;
+    char _payload[MESSAGE_SIZE];
     void _update();
     void _readAll();
     void _printPayload();
     void _readAtInterval();
     void _uploadAtInterval();
     int _numSensors;
+    void _appendCharacterToSensorLabels(char character[2]);
 };
 #endif

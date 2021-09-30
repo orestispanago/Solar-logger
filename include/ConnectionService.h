@@ -1,8 +1,9 @@
 #ifndef ConnectionService_h
 #define ConnectionService_h
-#include <Arduino.h>
 #include <WiFi.h>
 #include <MQTTClient.h> // MQTT Client from Joël Gaehwiler https://github.com/256dpi/arduino-mqtt   keepalive manually to 15s
+
+const int MESSAGE_SIZE = 1024;
 
 class ConnectionService
 {
