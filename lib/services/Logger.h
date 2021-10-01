@@ -16,7 +16,7 @@ public:
 private:
     Sensor **_sensors;
     Timer *_timer;
-    Connection _Connection;
+    Connection _connection;
     StaticJsonDocument<MESSAGE_SIZE> _jsonDoc;
     char _payload[MESSAGE_SIZE];
     void _update();

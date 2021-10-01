@@ -24,8 +24,8 @@ void Logger::_uploadAtInterval()
     {
         _timer->lastUploadMillis = _timer->currentMillis;
         _update();
-        _printPayload();
-        // _Connection.upload(_payload);
+        // _printPayload();
+        _connection.upload(_payload);
     }
 }
 void Logger::_update()
@@ -34,8 +34,6 @@ void Logger::_update()
     for (int i = 0; i < _numSensors; i++)
     {
         _jsonDoc[_sensors[i]->label] = _sensors[i]->measurement.mean();
-        // strcpy(labelS, _sensors[i]->label);
-        // strcat(labelS, "S");
         _jsonDoc[_sensors[i]->labelS] = _sensors[i]->measurement.stdev();
     }
     serializeJson(_jsonDoc, _payload);
@@ -54,11 +52,11 @@ void Logger::_printPayload()
 }
 void Logger::run()
 {
-    if (_Connection.statusOK())
+    if (_connection.statusOK())
     {
         _readAtInterval();
         _uploadAtInterval();
-        _Connection.loop();
+        _connection.loop();
     }
 }
 void Logger::_appendCharacterToSensorLabels(char character[2])
