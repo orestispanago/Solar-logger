@@ -8,5 +8,4 @@ const char* mqtt_user = "YourMQTTBrokerUsername";
 const char* mqtt_pw = "YourMQTTBrokerPassword";
 const char* input_topic = "YourTopic";
 
-
 #endif

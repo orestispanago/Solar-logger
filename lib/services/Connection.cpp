@@ -1,20 +1,15 @@
-#include "ConnectionService.h"
-#include "credentials.h"
+#include "Connection.h"
 
-
-MQTTClient mqttClient(MESSAGE_SIZE);
-
-ConnectionService::ConnectionService()
+Connection::Connection()
 {
     unsigned long waitCount;
     uint8_t status;
     String clientId;
-
     WiFiClient espClient;
     WiFi.mode(WIFI_STA); // config WiFi as client
 }
 
-boolean ConnectionService::isConnected()
+boolean Connection::statusOK()
 {
     // Connection status for WiFi and MQTT:
     //
@@ -73,13 +68,13 @@ boolean ConnectionService::isConnected()
     return status == 5;
 }
 
-void ConnectionService::upload(char *payload)
+void Connection::upload(char *payload)
 {
     mqttClient.publish(input_topic, payload);
     mqttClient.loop(); //      give control to MQTT to send message to broker
 }
 
-void ConnectionService::loop()
+void Connection::loop()
 {
     mqttClient.loop();
 }

@@ -94,9 +94,9 @@ class SensirionThermometer{
     - _themoHygrometer : ThermoHygrometer
 }
 
-class WiFiMQTTClient{
-    + WiFiMQTTClient()
-    + connected() : boolean
+class Connection{
+    + Connection()
+    + statusOK() : boolean
     + upload(payload)
     + loop()
     - messageSize
@@ -136,6 +136,6 @@ SensirionThermometer *-- ThermoHygrometer
 
 Logger *-- Sensor
 Logger *-- Timer
-Logger *-- WiFiMQTTClient
+Logger *-- Connection
 
 @enduml

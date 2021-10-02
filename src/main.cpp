@@ -3,7 +3,7 @@
 #include "Pyranometer.h"
 #include "SensirionThermometer.h"
 #include "SensirionHygrometer.h"
-#include "LoggerService.h"
+#include "Logger.h"
 #include "Flowmeter.h"
 #include "Anemometer.h"
 
@@ -29,7 +29,7 @@ Sensor *sensors[] = {
     new Flowmeter(13, "Flow", 1800, &timer),
 };
 
-LoggerService loggerService(sensors, &timer, len(sensors));
+Logger logger(sensors, &timer, len(sensors));
 
 void setup()
 {
@@ -39,5 +39,5 @@ void setup()
 
 void loop()
 {
-  loggerService.run();
+  logger.run();
 }

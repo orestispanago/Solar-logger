@@ -1,7 +1,7 @@
 #ifndef Sensor_h
 #define Sensor_h
 
-#include "Measurement.h"
+#include "../models/Measurement.h"
 #include <Arduino.h>
 
 class Sensor
