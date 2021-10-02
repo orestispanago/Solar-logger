@@ -14,6 +14,8 @@ public:
     void loop();
 
 private:
+    #include "../../src/credentials.h"
+    MQTTClient mqttClient = MQTTClient(MESSAGE_SIZE);
     uint8_t status;
     unsigned long waitCount;
     WiFiClient espClient;

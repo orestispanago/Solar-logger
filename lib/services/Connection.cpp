@@ -1,20 +1,10 @@
 #include "Connection.h"
 
-const char* WiFi_SSID = "YourWiFiSSID";
-const char* WiFi_PW = "YourWiFiPassword";
-const char* mqtt_broker = "YourMQTTBrokerIP";
-const char* mqtt_user = "YourMQTTBrokerUsername";
-const char* mqtt_pw = "YourMQTTBrokerPassword";
-const char* input_topic = "YourTopic";
-
-MQTTClient mqttClient(MESSAGE_SIZE);
-
 Connection::Connection()
 {
     unsigned long waitCount;
     uint8_t status;
     String clientId;
-
     WiFiClient espClient;
     WiFi.mode(WIFI_STA); // config WiFi as client
 }
