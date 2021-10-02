@@ -29,7 +29,7 @@ When the upload interval has passed, the ```JSON``` payload is updated with ```m
 
 The ```Measurenent``` stats are reset and the payload is published to the MQTT broker.
 
-![flowchart](out/flowchart/flowchart.png)
+![flowchart](out/extras/flowchart/flowchart.png)
 
 ### Configuration
 
@@ -43,7 +43,7 @@ Thats all!
 
 To simplify the configuration process and avoid duplicate code, the project has been structured like this:
 
-![class_diagram](out/class_diagram/class_diagram.png)
+![class_diagram](./out/extras/class_diagram/class_diagram.png)
 
 ### Requirements
 
