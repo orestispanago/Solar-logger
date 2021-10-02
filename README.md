@@ -4,12 +4,6 @@ WiFi-based data logger for solar thermal collectors, developed on an ESP32 board
 
 ### Sensors
 
-* PT100 / PT1000 thermometer (using MAX31865)
-* Pyranometer (using ADS1115)
-* SHT20 Thermo-hygrometer
-* Anemometer
-* Flowmeter
-
 | Physical quantity | Sensor           | Interface | Board    |
 |-------------------|:----------------:|:---------:|:--------:|
 | Temperature       | PT100/PT1000     | SPI       | MAX31865 |
@@ -21,7 +15,7 @@ WiFi-based data logger for solar thermal collectors, developed on an ESP32 board
 
 ### Workflow
 
-During each iteration of the ```loop()```, the ESP32 checks for connection status.
+On each iteration of the main ```loop()```, the ESP32 checks for connection status.
 
 When the specified sampling interval has passed, all sensors are read and the measurement stats ```min, max, mean, stdev``` are calculated and stored in the ```Measurement``` object.
 
