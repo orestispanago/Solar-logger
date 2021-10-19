@@ -11,16 +11,16 @@
 repeat :Check connection
 if (Connected to WiFi and MQTT broker) then (yes)
     if (Sampling interval passed) then (yes)
-        :Read sensors data;
+        :Read sensors;
         :Calculate physical quantities;
-        :Calculate statistics;
+        :Calculate mean, stdev;
     else (no)
         :continue;
     endif
 
     if (Upload interval passed) then (yes)
-        :Add measurements to JSON;
-        :Reset measurement values;
+        :Update JSON with mean, stdev;
+        :Reset mean, stdev and counters;
         :Publish JSON to MQTT broker;
     else (no)
         :continue;
@@ -28,7 +28,7 @@ if (Connected to WiFi and MQTT broker) then (yes)
 
     :Keep MQTT connection alive;
 else (no)
-    :continue;
+    :Try to connect;
 endif
 
 @enduml
