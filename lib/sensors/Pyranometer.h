@@ -12,7 +12,7 @@ public:
 private:
     uint _adsPin = 0;
     Adafruit_ADS1115 _ads;
-    void _init();
+    int16_t _adc0;
 };
 
 #endif

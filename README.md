@@ -37,7 +37,133 @@ Thats all!
 
 To simplify the configuration process and avoid duplicate code, the project has been structured like this:
 
-![class_diagram](./out/extras/class_diagram/class_diagram.png)
+```mermaid
+classDiagram
+Sensor *-- Measurement
+Sensor <-- Anemometer
+Sensor <-- Flowmeter
+Sensor <-- Pyranometer
+Sensor <-- PT
+Sensor <-- SensirionThermometer
+Sensor <-- SensirionHygrometer
+Anemometer *-- Timer
+Flowmeter *-- Timer
+SensirionHygrometer *-- ThermoHygrometer
+SensirionThermometer *-- ThermoHygrometer
+
+Logger *-- Sensor
+Logger *-- Timer
+Logger *-- Connection
+class Sensor{
+    + read() : virtual
+    + measurement : Measurement
+    + label
+    + count
+}
+class Measurement{
+    - _count
+    - _current
+    - _sum
+    - _mean
+    - _min
+    - _max
+    - _sqDiffMean
+    - _stdev
+    + count()
+    + current()
+    + sum()
+    + mean()
+    + min()
+    + max()
+    + stdev()
+    + sample(_current)
+    - _reset()
+}
+class Timer{
+    + Timer(readIntervalMillis, uploadIntervalMillis)
+    + readInterval
+    + uploadInterval
+    + currentMillis
+    + lastReadMillis
+    + lastUploadMillis
+}
+class Anemometer{
+    + Anemometer(pin, label, pulsesPerMetre, timer)
+    + read()
+    - _pin
+    - _timer : Timer
+    - _pulsesPerMetre
+    - _frequency()
+    - _metresPerSecond()
+}
+class Flowmeter{
+    + Flowmeter(pin, label, pulsesPerLitre, timer)
+    + read()
+    - _pin
+    - _pulsesPerLitre
+    - Timer _timer
+    - _frequency()
+    - _litresPerSecond()
+    - _litresPerHour()
+}
+class Pyranometer{
+    + Pyranometer(label)
+    + read()
+    - _ads : Adafruit_ADS1115
+    - _init()
+}
+class PT{
+    + PT(rtdType, wires, pin, label)
+    + read()
+    -_max31865 : Adafruit_MAX31865
+    - _rRef
+    - _rNominal
+    - _wires
+    - _begin()
+}
+class ThermoHygrometer{
+    - _sht20 : DFRobot_SHT20
+    - _init()
+}
+class SensirionHygrometer{
+    + SensirionHygrometer(thermoHygrometer, label)
+    + read()
+    - _thermoHygrometer : ThermoHygrometer
+}
+class SensirionThermometer{
+    + SensirionThermometer(thermoHygrometer, label)
+    + read()
+    - _themoHygrometer : ThermoHygrometer
+}
+class Connection{
+    + Connection()
+    + statusOK() : boolean
+    + upload(payload)
+    + loop()
+    - messageSize
+    - status
+    - waitCount
+    - espClient : WiFiClient
+    - clientId
+}
+class Logger{
+    + Logger(sensors, timer)
+    + run();
+    - _sensors : Sensor
+    - _timer : Timer
+    - _client : WiFiMQTTClient
+    - _jsonDoc
+    - _payload
+    - _update()
+    - _readAll()
+    - _printPayload()
+    - _readAtInterval()
+    - _uploadAtInterval()
+}
+
+```
+
+
 
 ### Requirements
 
