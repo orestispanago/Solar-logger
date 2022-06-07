@@ -9,10 +9,10 @@
 Timer timer(2000, 10000); // sampling, upload interval in milliseconds
 
 Sensor *sensors[] = {
-    new PT(1000, FOUR_WIRE, 0, "Tin"),
-    new PT(1000, FOUR_WIRE, 4, "Tout"),
+    new PT(100, FOUR_WIRE, 0, "Tin"),
+    new PT(100, FOUR_WIRE, 4, "Tout"),
     new PT(1000, FOUR_WIRE, 16, "Tamb"),
-    new Pyranometer("Irr"),
+    new Pyranometer("Irr", 5.07 / 1000),
     new Anemometer(12, "Wind", 1.25, &timer),
     new Flowmeter(13, "Flow", 1800, &timer),
 };
